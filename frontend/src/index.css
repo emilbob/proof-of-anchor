@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/* Custom styles for wallet adapter */
+.wallet-adapter-button {
+  @apply !bg-indigo-600 hover:!bg-indigo-700 !text-white !font-medium !px-6 !py-3 !rounded-lg !transition-colors;
+}
+
+.wallet-adapter-modal-wrapper {
+  @apply !z-50;
+}
+
+.wallet-adapter-modal {
+  @apply !bg-white !rounded-xl !shadow-2xl;
+}
+
+.wallet-adapter-modal-title {
+  @apply !text-gray-900 !font-semibold;
+}
+
+.wallet-adapter-modal-list {
+  @apply !space-y-2;
+}
+
+.wallet-adapter-modal-list-item {
+  @apply !bg-gray-50 hover:!bg-gray-100 !rounded-lg !p-4 !transition-colors;
+}

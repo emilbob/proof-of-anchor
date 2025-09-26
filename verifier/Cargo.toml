@@ -1,0 +1,16 @@
+[package]
+name = "verifier"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+solana-client = { workspace = true }
+solana-sdk = { workspace = true }
+anchor-client = "0.29.0"
+sha2 = "0.10"
+hex = "0.4"
