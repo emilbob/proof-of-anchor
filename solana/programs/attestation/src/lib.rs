@@ -9,7 +9,7 @@ pub mod attestation {
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
         let attestation_account = &mut ctx.accounts.attestation_account;
         attestation_account.authority = ctx.accounts.authority.key();
-        attestation_account.bump = *ctx.bumps.get("attestation_account").unwrap();
+        attestation_account.bump = ctx.bumps.attestation_account;
         Ok(())
     }
 
@@ -18,7 +18,7 @@ pub mod attestation {
         proof_hash: [u8; 32],
         public_inputs: Vec<u8>,
     ) -> Result<()> {
-        let attestation_account = &mut ctx.accounts.attestation_account;
+        let _attestation_account = &mut ctx.accounts.attestation_account;
         let proof_record = &mut ctx.accounts.proof_record;
 
         // Store the proof hash and public inputs
@@ -51,7 +51,7 @@ pub mod attestation {
         );
 
         proof_record.verified = is_valid;
-        proof_record.verifier = ctx.accounts.verifier.key();
+        proof_record.verifier = Some(ctx.accounts.verifier.key());
 
         emit!(ProofVerified {
             proof_hash,

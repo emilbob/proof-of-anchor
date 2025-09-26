@@ -22,7 +22,7 @@ fn main() -> Result<()> {
     println!("🔍 Starting proof verification process...");
 
     // Load witness data
-    let witness_path = "noir/witness/input.json";
+    let witness_path = "../noir/witness/input.json";
     let witness_data: WitnessInput = serde_json::from_str(&fs::read_to_string(witness_path)?)?;
     
     println!("📄 Loaded witness data from {}", witness_path);

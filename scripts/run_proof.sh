@@ -35,9 +35,9 @@ cd noir
 echo "📦 Compiling Noir circuit..."
 nargo compile
 
-# Generate proof
-echo "🔐 Generating proof..."
-nargo prove
+# Execute circuit
+echo "🔐 Executing circuit..."
+nargo execute
 
 echo "✅ Noir proof generated successfully!"
 

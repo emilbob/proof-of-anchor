@@ -1,16 +1,10 @@
-[package]
-name = "attestation"
-version = "0.1.0"
-description = "Created with Anchor"
-edition = "2021"
+[workspace]
+members = [
+    "programs/attestation",
+]
+resolver = "2"
 
-[lib]
-crate-type = ["cdylib", "lib"]
-name = "attestation"
-
-[features]
-no-entrypoint = []
-no-idl = []
-no-log-ix-name = []
-cpi = ["no-entrypoint"]
-default = []
+[workspace.dependencies]
+anchor-lang = "0.29.0"
+anchor-spl = "0.29.0"
+solana-program = "1.17.0"
