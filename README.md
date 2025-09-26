@@ -1,6 +1,6 @@
-# Proof Anchor
+# Proof of Anchor
 
-A comprehensive proof verification system combining Solana/Anchor, Noir ZK circuits, and React frontend.
+A comprehensive zero-knowledge proof verification system combining Solana/Anchor, Noir ZK circuits, and React frontend for secure on-chain attestation.
 
 ## Project Structure
 
