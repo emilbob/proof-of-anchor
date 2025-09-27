@@ -36,3 +36,6 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Proof sample files (generated during testing)
+verifier/verifier/proof_samples/
