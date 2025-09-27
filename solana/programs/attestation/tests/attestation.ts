@@ -1,6 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { Attestation } from "../target/types/attestation";
+import { Attestation } from "../../../target/types/attestation";
 import { expect } from "chai";
 
 describe("attestation", () => {
@@ -8,7 +8,7 @@ describe("attestation", () => {
   anchor.setProvider(anchor.AnchorProvider.env());
 
   const program = anchor.workspace.Attestation as Program<Attestation>;
-  const provider = anchor.getProvider();
+  const provider = anchor.getProvider() as anchor.AnchorProvider;
 
   it("Initializes the attestation account", async () => {
     const [attestationAccount] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -27,7 +27,7 @@ describe("attestation", () => {
 
     console.log("Initialize transaction signature", tx);
 
-    const account = await program.account.attestationAccount.fetch(
+    const account = await program.account.AttestationAccount.fetch(
       attestationAccount
     );
     expect(account.authority.toString()).to.equal(
@@ -42,7 +42,7 @@ describe("attestation", () => {
     );
 
     const proofHash = new Uint8Array(32).fill(1);
-    const publicInputs = Buffer.from("test public inputs");
+    const publicInputs = new Uint8Array(32).fill(2);
 
     const [proofRecord] = anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("proof"), proofHash],
@@ -50,7 +50,7 @@ describe("attestation", () => {
     );
 
     const tx = await program.methods
-      .submitProof(proofHash, Array.from(publicInputs))
+      .submitProof(Array.from(proofHash), Buffer.from(publicInputs))
       .accounts({
         attestationAccount,
         proofRecord,
@@ -61,7 +61,7 @@ describe("attestation", () => {
 
     console.log("Submit proof transaction signature", tx);
 
-    const account = await program.account.proofRecord.fetch(proofRecord);
+    const account = await program.account.ProofRecord.fetch(proofRecord);
     expect(account.proofHash).to.deep.equal(Array.from(proofHash));
     expect(account.submitter.toString()).to.equal(
       provider.wallet.publicKey.toString()
