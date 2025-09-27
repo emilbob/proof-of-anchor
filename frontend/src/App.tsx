@@ -5,14 +5,13 @@ import {
 } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
-import { clusterApiUrl, Connection } from "@solana/web3.js";
+import { clusterApiUrl } from "@solana/web3.js";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { Shield, CheckCircle, Eye } from "lucide-react";
 
 // Import types
 import {
   ProofStatus,
-  AppState,
   ProofGenerationResult,
   ProofVerificationResult,
 } from "./types";
