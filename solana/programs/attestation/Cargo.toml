@@ -18,3 +18,7 @@ default = []
 [dependencies]
 anchor-lang = { workspace = true }
 anchor-spl = { workspace = true }
+
+# Suppress unexpected_cfgs warnings from Anchor macros
+[lints.rust]
+unexpected_cfgs = "allow"
