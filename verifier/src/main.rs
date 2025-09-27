@@ -2,7 +2,6 @@ use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::fs;
-use std::path::Path;
 use std::time::Instant;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -240,6 +239,7 @@ fn verify_proof_enhanced(proof_data: &ProofData) -> Result<VerificationResult> {
     })
 }
 
+#[allow(dead_code)]
 fn verify_proof(proof_data: &ProofData) -> Result<bool> {
     let result = verify_proof_enhanced(proof_data)?;
     Ok(result.is_valid)
@@ -283,6 +283,7 @@ fn save_proof_data(proof_data: &ProofData) -> Result<()> {
     Ok(())
 }
 
+#[allow(dead_code)]
 fn load_proof_data(proof_id: &str) -> Result<ProofData> {
     let proof_file = format!("verifier/proof_samples/proof_{}.json", proof_id);
     let content = fs::read_to_string(&proof_file)
@@ -294,6 +295,7 @@ fn load_proof_data(proof_id: &str) -> Result<ProofData> {
     Ok(proof_data)
 }
 
+#[allow(dead_code)]
 fn list_proofs() -> Result<Vec<String>> {
     let proof_dir = "verifier/proof_samples";
     let mut proof_ids = Vec::new();
