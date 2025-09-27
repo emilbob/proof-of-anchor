@@ -12,10 +12,10 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({
       case "generating":
       case "verifying":
         return (
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-700"></div>
         );
       case "success":
-        return <CheckCircle className="h-6 w-6 text-green-500" />;
+        return <CheckCircle className="h-6 w-6 text-green-700" />;
       case "error":
         return <XCircle className="h-6 w-6 text-red-500" />;
       default:

@@ -1,6 +1,11 @@
 // Global type definitions for the Proof Anchor frontend
 
-export type ProofStatus = "idle" | "generating" | "verifying" | "success" | "error";
+export type ProofStatus =
+  | "idle"
+  | "generating"
+  | "verifying"
+  | "success"
+  | "error";
 
 export interface ProofData {
   proof: string;
@@ -51,13 +56,13 @@ export interface StatusIndicatorProps {
 }
 
 export interface ProofGeneratorProps {
-  onGenerate: () => Promise<void>;
+  onGenerate: () => Promise<ProofGenerationResult>;
   disabled: boolean;
   status: ProofStatus;
 }
 
 export interface ProofVerifierProps {
-  onVerify: () => Promise<void>;
+  onVerify: () => Promise<ProofVerificationResult>;
   disabled: boolean;
   status: ProofStatus;
   proofHash: string;

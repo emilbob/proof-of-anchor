@@ -4,11 +4,18 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "Courier New", "Lucida Console", "Monaco", "Menlo", "Consolas",
+    "Liberation Mono", "DejaVu Sans Mono", monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff; /* white background */
+  color: #1f2937; /* dark text */
+}
+
+/* Light theme for root element */
+#root {
+  background-color: #ffffff;
+  min-height: 100vh;
 }
 
 code {
@@ -16,9 +23,9 @@ code {
     monospace;
 }
 
-/* Custom styles for wallet adapter */
+/* Custom styles for wallet adapter - Light theme */
 .wallet-adapter-button {
-  @apply !bg-indigo-600 hover:!bg-indigo-700 !text-white !font-medium !px-6 !py-3 !rounded-lg !transition-colors;
+  @apply !bg-orange-700 hover:!bg-orange-800 !text-white !font-medium !px-6 !py-3 !rounded-lg !transition-colors;
 }
 
 .wallet-adapter-modal-wrapper {
@@ -38,5 +45,5 @@ code {
 }
 
 .wallet-adapter-modal-list-item {
-  @apply !bg-gray-50 hover:!bg-gray-100 !rounded-lg !p-4 !transition-colors;
+  @apply !bg-gray-50 hover:!bg-gray-100 !text-gray-900 !rounded-lg !p-4 !transition-colors;
 }
