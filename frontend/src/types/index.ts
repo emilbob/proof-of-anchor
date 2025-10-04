@@ -4,7 +4,9 @@ export type ProofStatus =
   | "idle"
   | "generating"
   | "verifying"
+  | "pending_vote"
   | "success"
+  | "verification_complete"
   | "error";
 
 export interface ProofData {
@@ -58,12 +60,66 @@ export interface StatusIndicatorProps {
 export interface ProofGeneratorProps {
   onGenerate: () => Promise<ProofGenerationResult>;
   disabled: boolean;
-  status: ProofStatus;
 }
 
 export interface ProofVerifierProps {
   onVerify: () => Promise<ProofVerificationResult>;
   disabled: boolean;
-  status: ProofStatus;
-  proofHash: string;
+}
+
+// Transparency and Legitimacy Types
+export interface ProjectTransparencyData {
+  domain: string;
+  transparencyScore: number;
+  riskLevel: number;
+  certificateValid: boolean;
+  lastVerified: number;
+  metadata: TransparencyMetadata;
+}
+
+export interface TransparencyMetadata {
+  hasPublicGithub: boolean;
+  hasDocumentedRoadmap: boolean;
+  hasAuditReports: boolean;
+  hasTeamVerification: boolean;
+  hasTokenEconomics: boolean;
+  codeReviewScore: number;
+}
+
+export interface LegitimacyAssessment {
+  isLegitimate: boolean;
+  confidenceScore: number;
+  riskFactors: string[];
+  transparencyIndicators: string[];
+  overallRecommendation: string;
+}
+
+export interface CommunityVote {
+  voter: string;
+  isLegitimate: boolean;
+  confidenceLevel: number;
+  timestamp: number;
+}
+
+export interface ProjectRating {
+  projectId: string;
+  domainHash: string;
+  totalVotes: number;
+  positiveVotes: number;
+  negativeVotes: number;
+  finalScore: number;
+  verified: boolean;
+  lastUpdated: number;
+}
+
+// Component prop types for new components
+export interface ProjectTransparencyCardProps {
+  projectData: ProjectTransparencyData;
+  legitimacyAssessment: LegitimacyAssessment;
+}
+
+export interface CommunityVotingPanelProps {
+  currentRating: ProjectRating;
+  onVote: (isLegitimate: boolean, confidenceLevel: number) => Promise<void>;
+  userVote?: CommunityVote;
 }

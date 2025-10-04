@@ -1,19 +1,22 @@
 # Components
 
-This directory contains reusable UI components for the Proof Anchor frontend.
+This directory contains reusable UI components for the Proof Anchor zkTLS transparency rating system.
 
 ## Available Components
 
-- `ProofGenerator.jsx` - Component for generating ZK proofs
-- `ProofVerifier.jsx` - Component for verifying proofs
-- `WalletConnection.jsx` - Wallet connection component
-- `StatusIndicator.jsx` - Status display component
+- `ProofGenerator.tsx` - Component for generating zkTLS proofs
+- `ProofVerifier.tsx` - Component for verifying zkTLS proofs
+- `StatusIndicator.tsx` - Status display component for proof operations
+- `ProjectTransparencyCard.tsx` - Component for displaying project transparency analysis
+- `CommunityVotingPanel.tsx` - Component for community voting on project legitimacy
 
 ## Usage
 
 Import and use these components in your pages:
 
-```jsx
-import { ProofGenerator } from "./components/ProofGenerator";
-import { ProofVerifier } from "./components/ProofVerifier";
+```tsx
+import ProofGenerator from "./components/ProofGenerator";
+import ProofVerifier from "./components/ProofVerifier";
+import ProjectTransparencyCard from "./components/ProjectTransparencyCard";
+import CommunityVotingPanel from "./components/CommunityVotingPanel";
 ```

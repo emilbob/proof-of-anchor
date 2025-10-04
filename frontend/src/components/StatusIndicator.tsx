@@ -1,5 +1,5 @@
 import React from "react";
-import { CheckCircle, XCircle, Shield } from "lucide-react";
+import { CheckCircle, XCircle, Shield, Vote } from "lucide-react";
 import { StatusIndicatorProps } from "@/types";
 
 const StatusIndicator: React.FC<StatusIndicatorProps> = ({
@@ -14,8 +14,12 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({
         return (
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-700"></div>
         );
+      case "pending_vote":
+        return <Vote className="h-6 w-6 text-blue-700" />;
       case "success":
         return <CheckCircle className="h-6 w-6 text-green-700" />;
+      case "verification_complete":
+        return <CheckCircle className="h-8 w-8 text-green-600" />;
       case "error":
         return <XCircle className="h-6 w-6 text-red-500" />;
       default:
@@ -29,10 +33,14 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({
         return "Generating proof...";
       case "verifying":
         return "Verifying proof...";
+      case "pending_vote":
+        return "Analysis complete! Vote required to finalize.";
       case "success":
+        return "Ready for final verification!";
+      case "verification_complete":
         return verificationResult
-          ? "Proof verified successfully!"
-          : "Proof generated successfully!";
+          ? "🎉 Analysis Complete! Project verified and community consensus reached."
+          : "❌ Verification failed, but analysis complete.";
       case "error":
         return "Operation failed";
       default:

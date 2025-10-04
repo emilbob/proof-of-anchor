@@ -1,19 +1,21 @@
 # Pages
 
-This directory contains page components for the Proof Anchor frontend.
+This directory is reserved for future page components in the Proof Anchor zkTLS transparency rating system.
 
-## Available Pages
+## Current Implementation
 
-- `HomePage.jsx` - Main landing page
-- `ProofPage.jsx` - Proof generation and verification page
-- `HistoryPage.jsx` - Proof history and status page
+Currently, all functionality is implemented in a single-page application in `App.tsx` which includes:
 
-## Usage
+- zkTLS proof generation and verification
+- Project transparency analysis
+- Community voting system
+- Real-time status updates
 
-These pages can be used with React Router for multi-page navigation:
+## Future Pages
 
-```jsx
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { HomePage } from "./pages/HomePage";
-import { ProofPage } from "./pages/ProofPage";
-```
+This directory can be used to organize the application into multiple pages when needed:
+
+- `HomePage.tsx` - Main landing page with project overview
+- `TransparencyPage.tsx` - Detailed transparency analysis page
+- `VotingPage.tsx` - Community voting interface
+- `HistoryPage.tsx` - Proof history and verification records

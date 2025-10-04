@@ -5,7 +5,6 @@ import { ProofGeneratorProps } from "@/types";
 const ProofGenerator: React.FC<ProofGeneratorProps> = ({
   onGenerate,
   disabled,
-  status,
 }) => {
   return (
     <button

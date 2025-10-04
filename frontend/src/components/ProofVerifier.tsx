@@ -5,8 +5,6 @@ import { ProofVerifierProps } from "@/types";
 const ProofVerifier: React.FC<ProofVerifierProps> = ({
   onVerify,
   disabled,
-  status,
-  proofHash,
 }) => {
   return (
     <button
