@@ -20,4 +20,9 @@ export default defineConfig({
   optimizeDeps: {
     include: ["@solana/web3.js", "@coral-xyz/anchor"],
   },
+  build: {
+    rollupOptions: {
+      external: [],
+    },
+  },
 });
