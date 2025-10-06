@@ -1,13 +1,13 @@
-# Proof Anchor Architecture
+# Proof Anchor Architecture - zkTLS Transparency Ratings
 
 ## Overview
 
-Proof Anchor is a comprehensive system for generating, verifying, and storing zero-knowledge proofs on the Solana blockchain. The system consists of four main components:
+Proof Anchor is a comprehensive system for **onchain transparency ratings** to differentiate legitimate projects from scams using **zkTLS** and **crowdsourced analysis**. The system consists of four main components:
 
-1. **Noir ZK Circuits** - Generate zero-knowledge proofs
-2. **Rust Verifier** - Verify proofs off-chain
-3. **Solana Program** - Store proof commitments on-chain
-4. **React Frontend** - User interface for proof operations
+1. **Noir zkTLS Circuits** - Generate zero-knowledge proofs for TLS certificate verification
+2. **Rust Verifier** - Enhanced verification with transparency analysis and risk assessment
+3. **Solana Program** - Store project ratings, community votes, and verification results
+4. **React Frontend** - Interactive UI for transparency analysis and community voting
 
 ## System Architecture
 
@@ -31,66 +31,76 @@ Proof Anchor is a comprehensive system for generating, verifying, and storing ze
 
 ## Component Details
 
-### 1. Noir ZK Circuits (`noir/`)
+### 1. Noir zkTLS Circuits (`noir/`)
 
-- **Purpose**: Generate zero-knowledge proofs
+- **Purpose**: Generate zero-knowledge proofs for TLS certificate verification
 - **Technology**: Noir language
 - **Key Files**:
-  - `src/main.nr` - Main circuit implementation
+  - `src/main.nr` - zkTLS circuit implementation
   - `witness/input.json` - Example witness data
   - `Nargo.toml` - Project configuration
 
-**Circuit Logic**:
+**zkTLS Circuit Logic**:
 
-- Proves knowledge of a secret value without revealing it
-- Uses Poseidon hash function for proof generation
-- Constrains that computed hash matches public input
+- Proves TLS certificate validity without revealing certificate details
+- Verifies domain name matches expected hash
+- Ensures certificate is not expired
+- Validates certificate serial number and issuer
+- Computes certificate validity proof using XOR operations
+- Enforces transparency score and risk level constraints
 
 ### 2. Rust Verifier (`verifier/`)
 
-- **Purpose**: Verify proofs off-chain
+- **Purpose**: Enhanced verification with transparency analysis and risk assessment
 - **Technology**: Rust with Solana SDK
 - **Key Files**:
-  - `src/main.rs` - Main verification logic
+  - `src/main.rs` - Enhanced verification logic with transparency analysis
   - `proof_samples/` - Generated proof artifacts
+  - `project_metadata/` - Project transparency metadata
 
-**Verification Process**:
+**Enhanced Verification Process**:
 
-1. Load witness data from Noir
-2. Generate proof using Noir circuit
-3. Verify proof validity
-4. Save proof data for Solana submission
+1. Load witness data from Noir zkTLS circuit
+2. Analyze project transparency metrics (GitHub, audits, team verification, etc.)
+3. Assess project legitimacy using risk factor analysis
+4. Generate zkTLS proof using Noir circuit
+5. Verify proof validity with enhanced constraints
+6. Save proof data and project metadata for Solana submission
 
 ### 3. Solana Program (`solana/`)
 
-- **Purpose**: Store proof commitments on-chain
+- **Purpose**: Store project ratings, community votes, and verification results
 - **Technology**: Anchor framework
 - **Key Files**:
-  - `programs/attestation/src/lib.rs` - Program logic
+  - `programs/attestation/src/lib.rs` - Enhanced program logic for transparency ratings
   - `Anchor.toml` - Program configuration
 
-**Program Features**:
+**Enhanced Program Features**:
 
-- Initialize attestation account
-- Submit proof hashes and public inputs
-- Verify proofs on-chain
-- Emit events for off-chain monitoring
+- Initialize attestation account with project counters
+- Submit projects for transparency verification
+- Community voting system with confidence levels
+- Calculate final legitimacy scores based on community consensus
+- Store zkTLS proof verification results
+- Emit events for off-chain monitoring and frontend updates
 
 ### 4. React Frontend (`frontend/`)
 
-- **Purpose**: User interface for proof operations
+- **Purpose**: Interactive UI for transparency analysis and community voting
 - **Technology**: React with Solana wallet integration
 - **Key Files**:
-  - `src/App.jsx` - Main application component
-  - `src/components/` - Reusable UI components
-  - `src/pages/` - Page components
+  - `src/App.tsx` - Main application component with transparency features
+  - `src/components/` - Reusable UI components including transparency cards
+  - `src/types/` - TypeScript definitions for transparency and voting data
 
-**Frontend Features**:
+**Enhanced Frontend Features**:
 
-- Wallet connection (Phantom, etc.)
-- Proof generation interface
-- Proof verification display
-- Real-time status updates
+- Solana wallet connection (Phantom, etc.)
+- zkTLS proof generation interface
+- Project transparency analysis display
+- Community voting panel with confidence levels
+- Real-time transparency score and risk level indicators
+- Interactive legitimacy assessment visualization
 
 ## Data Flow
 

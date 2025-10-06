@@ -1,6 +1,6 @@
-# Proof of Anchor
+# Proof of Anchor - zkTLS Transparency Ratings
 
-A comprehensive zero-knowledge proof verification system combining Solana/Anchor, Noir ZK circuits, and React frontend for secure on-chain attestation.
+A comprehensive zero-knowledge proof system for **onchain transparency ratings** to differentiate legitimate projects from scams using **zkTLS** and **crowdsourced analysis** on Solana blockchain.
 
 ## Project Structure
 
@@ -32,12 +32,22 @@ A comprehensive zero-knowledge proof verification system combining Solana/Anchor
 
 ## Architecture
 
-This project implements a proof verification system where:
+This project implements a **transparency rating system** for project legitimacy verification:
 
-- Noir circuits generate ZK proofs
-- Rust verifier validates proofs off-chain
-- Solana program stores proof commitments on-chain
-- React frontend provides user interface for proof submission and verification
+### Core Features
+
+- **zkTLS Verification**: Prove TLS certificate validity without revealing sensitive data
+- **Transparency Scoring**: Algorithm-based scoring system (0-100) for project transparency
+- **Risk Assessment**: Advanced scam detection with risk level scoring (0-10)
+- **Community Voting**: Crowdsourced analysis with confidence-weighted voting
+- **On-Chain Storage**: Immutable project ratings and verification data on Solana
+
+### System Components
+
+- **Noir zkTLS Circuits**: Generate zero-knowledge proofs for certificate verification
+- **Rust Verifier**: Enhanced verification with transparency analysis and risk assessment
+- **Solana Program**: Store project ratings, community votes, and verification results
+- **React Frontend**: Interactive UI for transparency analysis and community voting
 
 ## Development
 

@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tokio = { workspace = true }
+tokio = { workspace = true, features = ["full"] }
 serde = { workspace = true }
 serde_json = { workspace = true }
 anyhow = { workspace = true }
@@ -15,3 +15,14 @@ anchor-client = "0.29.0"
 sha2 = "0.10"
 hex = "0.4"
 chrono = { version = "0.4", features = ["serde"] }
+
+# Real TLS and HTTP dependencies
+rustls = "0.21"
+rustls-native-certs = "0.6"
+webpki = "0.22"
+x509-parser = "0.15"
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+rand = "0.8"
+scraper = "0.18"
+url = "2.4"
+regex = "1.10"

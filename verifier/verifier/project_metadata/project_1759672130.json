@@ -1,0 +1,24 @@
+{
+  "domain": "example-project.com",
+  "certificate_info": {
+    "issuer": "Let's Encrypt",
+    "expiry_date": 1767448102,
+    "is_valid": true,
+    "serial_number_hash": "3030303030303030363865323737323600000000000000000000000000000000"
+  },
+  "transparency_metrics": {
+    "has_public_github": false,
+    "has_documented_roadmap": false,
+    "has_audit_reports": false,
+    "has_team_verification": false,
+    "has_token_economics": false,
+    "code_review_score": 2
+  },
+  "risk_factors": {
+    "suspicious_domain_patterns": [],
+    "high_risk_keywords": [],
+    "unusual_certificate_issuer": false,
+    "short_certificate_validity": false,
+    "missing_security_headers": []
+  }
+}
