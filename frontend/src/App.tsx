@@ -9,6 +9,8 @@ import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { Shield, AlertTriangle, Star, Users } from "lucide-react";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import ThemeToggle from "./components/ThemeToggle";
 
 // Import types
 import {
@@ -355,7 +357,8 @@ const AppContent: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 dark:from-logo-dark dark:to-logo-dark">
+      <ThemeToggle />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
@@ -366,12 +369,12 @@ const AppContent: React.FC = () => {
             {/* Logo Image */}
             <img src="/poa.png" alt="Proof Anchor Logo" className="w-12 h-12" />
 
-            <h1 className="text-4xl font-bold text-gray-900">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
               Proof of Anchor
             </h1>
           </div>
 
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
             zkTLS Transparency Ratings & Project Legitimacy Verification
           </p>
           <div className="flex justify-center">
@@ -380,8 +383,8 @@ const AppContent: React.FC = () => {
 
           {/* Wallet Connection Status */}
           {!connected && (
-            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <p className="text-yellow-800 text-center">
+            <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+              <p className="text-yellow-800 dark:text-yellow-200 text-center">
                 🔗 Please connect your wallet and enter a project domain to
                 analyze
               </p>
@@ -396,15 +399,15 @@ const AppContent: React.FC = () => {
             proofStatus !== "pending_vote" &&
             proofStatus !== "pending_verification" &&
             proofStatus !== "verified" && (
-              <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
-                <p className="text-orange-800 text-center">
+              <div className="mt-4 p-4 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg">
+                <p className="text-orange-800 dark:text-orange-200 text-center">
                   ⚠️ You have already analyzed "{projectDomain.trim()}". Please
                   enter a different domain to analyze.
                 </p>
                 <div className="text-center mt-2">
                   <button
                     onClick={() => setAnalyzedDomains(new Set())}
-                    className="text-sm text-orange-700 underline hover:text-orange-900"
+                    className="text-sm text-orange-700 dark:text-orange-300 underline hover:text-orange-900 dark:hover:text-orange-100"
                   >
                     Clear analyzed domains history
                   </button>
@@ -415,8 +418,8 @@ const AppContent: React.FC = () => {
 
         {/* Main Content */}
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 text-center">
               zkTLS Proof Generation & Transparency Analysis
             </h2>
 
@@ -424,7 +427,7 @@ const AppContent: React.FC = () => {
             <div className="mb-6">
               <label
                 htmlFor="project-domain"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
                 Project Domain to Analyze
               </label>
@@ -434,12 +437,12 @@ const AppContent: React.FC = () => {
                 value={projectDomain}
                 onChange={(e) => setProjectDomain(e.target.value)}
                 placeholder="e.g., github.com, uniswap.org, ethereum.org"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-center text-lg"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-center text-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 disabled={
                   proofStatus === "generating" || proofStatus === "verifying"
                 }
               />
-              <p className="text-sm text-gray-500 mt-2 text-center">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 text-center">
                 Enter any domain to test the transparency analysis system
               </p>
             </div>
@@ -487,15 +490,15 @@ const AppContent: React.FC = () => {
             {/* Project Transparency Analysis */}
             {projectData && legitimacyAssessment && (
               <div className="mt-8 space-y-6">
-                <div className="border-t pt-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                     Project Transparency Analysis
                   </h3>
 
                   {/* Voting Requirement Message */}
                   {proofStatus === "pending_vote" && (
-                    <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                      <p className="text-blue-800 text-center font-medium">
+                    <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                      <p className="text-blue-800 dark:text-blue-200 text-center font-medium">
                         🗳️ Analysis Complete! Please vote on this project's
                         legitimacy to finalize the assessment.
                       </p>
@@ -504,13 +507,13 @@ const AppContent: React.FC = () => {
 
                   {/* Verification Complete Success Message */}
                   {proofStatus === "verification_complete" && (
-                    <div className="mb-6 p-6 bg-green-50 border-2 border-green-200 rounded-lg">
+                    <div className="mb-6 p-6 bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-lg">
                       <div className="text-center">
                         <div className="text-4xl mb-2">🎉</div>
-                        <h3 className="text-xl font-bold text-green-800 mb-2">
+                        <h3 className="text-xl font-bold text-green-800 dark:text-green-200 mb-2">
                           Analysis Complete!
                         </h3>
-                        <p className="text-green-700 font-medium">
+                        <p className="text-green-700 dark:text-green-300 font-medium">
                           {verificationResult
                             ? "Project verified successfully with community consensus!"
                             : "Verification completed with community input."}
@@ -574,42 +577,42 @@ const AppContent: React.FC = () => {
 
           {/* Features Grid */}
           <div className="grid md:grid-cols-4 gap-6">
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <Shield className="h-12 w-12 text-orange-700 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+              <Shield className="h-12 w-12 text-orange-700 dark:text-orange-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 zkTLS Verification
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Prove TLS certificate validity without revealing sensitive data
               </p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <Star className="h-12 w-12 text-green-700 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+              <Star className="h-12 w-12 text-green-700 dark:text-green-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 Transparency Ratings
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Score projects based on transparency and legitimacy indicators
               </p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <Users className="h-12 w-12 text-blue-700 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+              <Users className="h-12 w-12 text-blue-700 dark:text-blue-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 Community Voting
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Crowdsourced analysis to identify legitimate projects vs scams
               </p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-              <AlertTriangle className="h-12 w-12 text-red-700 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+              <AlertTriangle className="h-12 w-12 text-red-700 dark:text-red-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 Risk Assessment
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Advanced algorithms to detect potential scam indicators
               </p>
             </div>
@@ -626,13 +629,15 @@ const App: React.FC = () => {
   const endpoint = clusterApiUrl("devnet");
 
   return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>
-          <AppContent />
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+    <ThemeProvider>
+      <ConnectionProvider endpoint={endpoint}>
+        <WalletProvider wallets={wallets} autoConnect>
+          <WalletModalProvider>
+            <AppContent />
+          </WalletModalProvider>
+        </WalletProvider>
+      </ConnectionProvider>
+    </ThemeProvider>
   );
 };
 

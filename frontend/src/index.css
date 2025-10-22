@@ -10,12 +10,25 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff; /* white background */
   color: #1f2937; /* dark text */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode body styles */
+.dark body {
+  background-color: #090b0c; /* exact logo background color */
+  color: #f1f5f9; /* light text */
 }
 
 /* Light theme for root element */
 #root {
   background-color: #ffffff;
   min-height: 100vh;
+  transition: background-color 0.3s ease;
+}
+
+/* Dark theme for root element */
+.dark #root {
+  background-color: #090b0c;
 }
 
 code {
@@ -46,4 +59,17 @@ code {
 
 .wallet-adapter-modal-list-item {
   @apply !bg-gray-50 hover:!bg-gray-100 !text-gray-900 !rounded-lg !p-4 !transition-colors;
+}
+
+/* Dark mode wallet adapter styles */
+.dark .wallet-adapter-modal {
+  @apply !bg-gray-800 !rounded-xl !shadow-2xl;
+}
+
+.dark .wallet-adapter-modal-title {
+  @apply !text-gray-100 !font-semibold;
+}
+
+.dark .wallet-adapter-modal-list-item {
+  @apply !bg-gray-700 hover:!bg-gray-600 !text-gray-100 !rounded-lg !p-4 !transition-colors;
 }
