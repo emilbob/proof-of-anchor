@@ -380,7 +380,10 @@ const AppContent: React.FC = () => {
           <div className="flex justify-center">
             <WalletMultiButton className="!bg-orange-700 hover:!bg-orange-800 !text-white" />
           </div>
+        </div>
 
+        {/* Main Content */}
+        <div className="max-w-4xl mx-auto">
           {/* Wallet Connection Status */}
           {!connected && (
             <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
@@ -414,11 +417,8 @@ const AppContent: React.FC = () => {
                 </div>
               </div>
             )}
-        </div>
 
-        {/* Main Content */}
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8 mt-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 text-center">
               zkTLS Proof Generation & Transparency Analysis
             </h2>
