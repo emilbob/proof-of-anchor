@@ -39,3 +39,7 @@ Thumbs.db
 
 # Proof sample files (generated during testing)
 verifier/verifier/proof_samples/
+
+# Private pitch documents
+PITCH_DECK.md
+PITCH_NARRATION.md
