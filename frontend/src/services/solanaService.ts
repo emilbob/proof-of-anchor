@@ -58,9 +58,10 @@ class SolanaService {
       commitment: "confirmed",
     });
 
-    // Initialize program - use the exact deployed program ID
+    // Initialize program - use the exact deployed program ID from env or default
     const programId = new PublicKey(
-      "4jGQ4kaxDsPJ57u1iN8gX1X7ngBji2Z8R8ERmcVp1BLW"
+      import.meta.env.VITE_PROGRAM_ID ||
+        "4jGQ4kaxDsPJ57u1iN8gX1X7ngBji2Z8R8ERmcVp1BLW"
     );
 
     // Create a minimal program interface that matches what we need

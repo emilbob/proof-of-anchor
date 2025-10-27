@@ -70,8 +70,8 @@ const AppContent: React.FC = () => {
       // Create a proper wallet object for Anchor
       const anchorWallet = {
         publicKey: publicKey,
-        signTransaction: wallet.adapter.signTransaction.bind(wallet.adapter),
-        signAllTransactions: wallet.adapter.signAllTransactions.bind(
+        signTransaction: (wallet.adapter as any).signTransaction?.bind(wallet.adapter),
+        signAllTransactions: (wallet.adapter as any).signAllTransactions?.bind(
           wallet.adapter
         ),
       };
@@ -129,10 +129,10 @@ const AppContent: React.FC = () => {
           // Create a proper wallet object for Anchor
           const anchorWallet = {
             publicKey: publicKey,
-            signTransaction: wallet.adapter.signTransaction.bind(
+            signTransaction: (wallet.adapter as any).signTransaction?.bind(
               wallet.adapter
             ),
-            signAllTransactions: wallet.adapter.signAllTransactions.bind(
+            signAllTransactions: (wallet.adapter as any).signAllTransactions?.bind(
               wallet.adapter
             ),
           };
@@ -236,10 +236,10 @@ const AppContent: React.FC = () => {
           // Create a proper wallet object for Anchor
           const anchorWallet = {
             publicKey: publicKey,
-            signTransaction: wallet.adapter.signTransaction.bind(
+            signTransaction: (wallet.adapter as any).signTransaction?.bind(
               wallet.adapter
             ),
-            signAllTransactions: wallet.adapter.signAllTransactions.bind(
+            signAllTransactions: (wallet.adapter as any).signAllTransactions?.bind(
               wallet.adapter
             ),
           };
@@ -311,10 +311,10 @@ const AppContent: React.FC = () => {
           // Create a proper wallet object for Anchor
           const anchorWallet = {
             publicKey: publicKey,
-            signTransaction: wallet.adapter.signTransaction.bind(
+            signTransaction: (wallet.adapter as any).signTransaction?.bind(
               wallet.adapter
             ),
-            signAllTransactions: wallet.adapter.signAllTransactions.bind(
+            signAllTransactions: (wallet.adapter as any).signAllTransactions?.bind(
               wallet.adapter
             ),
           };
@@ -413,9 +413,7 @@ const AppContent: React.FC = () => {
             projectDomain.trim() &&
             analyzedDomains.has(projectDomain.trim().toLowerCase()) &&
             proofStatus !== "generating" &&
-            proofStatus !== "pending_vote" &&
-            proofStatus !== "pending_verification" &&
-            proofStatus !== "verified" && (
+            proofStatus !== "pending_vote" && (
               <div className="mt-4 p-4 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg">
                 <p className="text-orange-800 dark:text-orange-200 text-center">
                   ⚠️ You have already analyzed "{projectDomain.trim()}". Please
