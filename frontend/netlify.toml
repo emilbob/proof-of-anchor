@@ -9,7 +9,7 @@
   base = "frontend"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
   # Solana Configuration - Set these in Netlify UI under Site settings > Environment variables
   # VITE_SOLANA_RPC_URL = "https://api.devnet.solana.com"
   # VITE_PROGRAM_ID = "4jGQ4kaxDsPJ57u1iN8gX1X7ngBji2Z8R8ERmcVp1BLW"
