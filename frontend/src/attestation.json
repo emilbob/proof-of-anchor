@@ -1,0 +1,476 @@
+{
+  "version": "0.1.0",
+  "name": "attestation",
+  "address": "4jGQ4kaxDsPJ57u1iN8gX1X7ngBji2Z8R8ERmcVp1BLW",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [
+        {
+          "name": "attestationAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "submitProject",
+      "accounts": [
+        {
+          "name": "attestationAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "projectRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "submitter",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "domainHash",
+          "type": {
+            "array": ["u8", 32]
+          }
+        },
+        {
+          "name": "projectName",
+          "type": "string"
+        },
+        {
+          "name": "transparencyScore",
+          "type": "u32"
+        },
+        {
+          "name": "riskLevel",
+          "type": "u8"
+        },
+        {
+          "name": "certificateValidityHash",
+          "type": {
+            "array": ["u8", 32]
+          }
+        }
+      ]
+    },
+    {
+      "name": "voteOnProject",
+      "accounts": [
+        {
+          "name": "projectRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "voterRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "voter",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "domainHash",
+          "type": {
+            "array": ["u8", 32]
+          }
+        },
+        {
+          "name": "isLegitimate",
+          "type": "bool"
+        },
+        {
+          "name": "confidenceLevel",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "verifyZkTlsProof",
+      "accounts": [
+        {
+          "name": "attestationAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "proofRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "submitter",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "verifier",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "domainHash",
+          "type": {
+            "array": ["u8", 32]
+          }
+        },
+        {
+          "name": "proofHash",
+          "type": {
+            "array": ["u8", 32]
+          }
+        },
+        {
+          "name": "publicInputs",
+          "type": {
+            "vec": "u8"
+          }
+        },
+        {
+          "name": "isValid",
+          "type": "bool"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "AttestationAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "totalProjects",
+            "type": "u64"
+          },
+          {
+            "name": "totalVerifications",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProjectRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "domainHash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "projectName",
+            "type": "string"
+          },
+          {
+            "name": "transparencyScore",
+            "type": "u32"
+          },
+          {
+            "name": "riskLevel",
+            "type": "u8"
+          },
+          {
+            "name": "certificateValidityHash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "submitter",
+            "type": "publicKey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "verified",
+            "type": "bool"
+          },
+          {
+            "name": "verificationCount",
+            "type": "u64"
+          },
+          {
+            "name": "positiveVotes",
+            "type": "u64"
+          },
+          {
+            "name": "negativeVotes",
+            "type": "u64"
+          },
+          {
+            "name": "finalScore",
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoterRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "voter",
+            "type": "publicKey"
+          },
+          {
+            "name": "hasVoted",
+            "type": "bool"
+          },
+          {
+            "name": "vote",
+            "type": "bool"
+          },
+          {
+            "name": "confidenceLevel",
+            "type": "u8"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProofRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "proofHash",
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "publicInputs",
+            "type": {
+              "vec": "u8"
+            }
+          },
+          {
+            "name": "submitter",
+            "type": "publicKey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "verified",
+            "type": "bool"
+          },
+          {
+            "name": "verifier",
+            "type": {
+              "option": "publicKey"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "ProjectSubmitted",
+      "fields": [
+        {
+          "name": "domainHash",
+          "type": {
+            "array": ["u8", 32]
+          },
+          "index": false
+        },
+        {
+          "name": "projectName",
+          "type": "string",
+          "index": false
+        },
+        {
+          "name": "transparencyScore",
+          "type": "u32",
+          "index": false
+        },
+        {
+          "name": "riskLevel",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "submitter",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "timestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "ProjectVoted",
+      "fields": [
+        {
+          "name": "domainHash",
+          "type": {
+            "array": ["u8", 32]
+          },
+          "index": false
+        },
+        {
+          "name": "voter",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "isLegitimate",
+          "type": "bool",
+          "index": false
+        },
+        {
+          "name": "confidenceLevel",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "totalVotes",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "finalScore",
+          "type": "u32",
+          "index": false
+        },
+        {
+          "name": "verified",
+          "type": "bool",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "ZkTLSProofVerified",
+      "fields": [
+        {
+          "name": "domainHash",
+          "type": {
+            "array": ["u8", 32]
+          },
+          "index": false
+        },
+        {
+          "name": "proofHash",
+          "type": {
+            "array": ["u8", 32]
+          },
+          "index": false
+        },
+        {
+          "name": "verified",
+          "type": "bool",
+          "index": false
+        },
+        {
+          "name": "verifier",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "timestamp",
+          "type": "i64",
+          "index": false
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidProofHash",
+      "msg": "Invalid proof hash"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidTransparencyScore",
+      "msg": "Invalid transparency score"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidRiskLevel",
+      "msg": "Invalid risk level"
+    },
+    {
+      "code": 6003,
+      "name": "ProjectNameTooLong",
+      "msg": "Project name too long"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidConfidenceLevel",
+      "msg": "Invalid confidence level"
+    },
+    {
+      "code": 6005,
+      "name": "AlreadyVoted",
+      "msg": "Already voted on this project"
+    }
+  ],
+  "metadata": {
+    "address": "4jGQ4kaxDsPJ57u1iN8gX1X7ngBji2Z8R8ERmcVp1BLW"
+  }
+}

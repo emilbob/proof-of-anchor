@@ -8,7 +8,7 @@ import {
 } from "@solana/web3.js";
 import { AnchorProvider, Program, Idl, web3 } from "@coral-xyz/anchor";
 import { useWallet } from "@solana/wallet-adapter-react";
-import idl from "../../../solana/target/idl/attestation.json";
+import idl from "../attestation.json";
 
 export interface ProjectSubmissionData {
   domainHash: number[];

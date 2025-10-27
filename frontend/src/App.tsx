@@ -70,7 +70,9 @@ const AppContent: React.FC = () => {
       // Create a proper wallet object for Anchor
       const anchorWallet = {
         publicKey: publicKey,
-        signTransaction: (wallet.adapter as any).signTransaction?.bind(wallet.adapter),
+        signTransaction: (wallet.adapter as any).signTransaction?.bind(
+          wallet.adapter
+        ),
         signAllTransactions: (wallet.adapter as any).signAllTransactions?.bind(
           wallet.adapter
         ),
@@ -132,9 +134,9 @@ const AppContent: React.FC = () => {
             signTransaction: (wallet.adapter as any).signTransaction?.bind(
               wallet.adapter
             ),
-            signAllTransactions: (wallet.adapter as any).signAllTransactions?.bind(
-              wallet.adapter
-            ),
+            signAllTransactions: (
+              wallet.adapter as any
+            ).signAllTransactions?.bind(wallet.adapter),
           };
 
           await solanaService.initializeProgram(anchorWallet);
@@ -239,9 +241,9 @@ const AppContent: React.FC = () => {
             signTransaction: (wallet.adapter as any).signTransaction?.bind(
               wallet.adapter
             ),
-            signAllTransactions: (wallet.adapter as any).signAllTransactions?.bind(
-              wallet.adapter
-            ),
+            signAllTransactions: (
+              wallet.adapter as any
+            ).signAllTransactions?.bind(wallet.adapter),
           };
 
           await solanaService.initializeProgram(anchorWallet);
@@ -314,9 +316,9 @@ const AppContent: React.FC = () => {
             signTransaction: (wallet.adapter as any).signTransaction?.bind(
               wallet.adapter
             ),
-            signAllTransactions: (wallet.adapter as any).signAllTransactions?.bind(
-              wallet.adapter
-            ),
+            signAllTransactions: (
+              wallet.adapter as any
+            ).signAllTransactions?.bind(wallet.adapter),
           };
 
           await solanaService.initializeProgram(anchorWallet);
