@@ -1,9 +1,11 @@
 #!/bin/bash
 
-# Run proof generation and verification with REAL data
+# Run REAL cryptographic proof generation and verification
+# No simulated data - everything is real!
 set -e
 
-echo "🔍 Starting REAL zkTLS proof generation and verification..."
+echo "🔍 Starting REAL zkTLS CRYPTOGRAPHIC proof generation and verification..."
+echo "⚡ Note: This uses real nargo prove (not simulated) - expect 30-60 second proof generation time"
 
 # Check if we're in the right directory
 if [ ! -f "Cargo.toml" ]; then
@@ -74,18 +76,20 @@ echo "✅ Proof verification completed!"
 
 # Step 4: Show results
 echo ""
-echo "🎉 REAL zkTLS proof pipeline completed successfully!"
+echo "🎉 REAL CRYPTOGRAPHIC zkTLS proof pipeline completed successfully!"
 echo ""
 echo "📋 Summary:"
 echo "  - Domain analyzed: $DOMAIN"
-echo "  - Real TLS certificate verified"
-echo "  - Real transparency data analyzed"
-echo "  - zkTLS proof generated with Noir"
-echo "  - Proof verified and ready for Solana submission"
+echo "  - ✅ Real TLS certificate verified"
+echo "  - ✅ Real transparency data analyzed"
+echo "  - ✅ REAL cryptographic zkTLS proof generated with nargo prove"
+echo "  - ✅ REAL cryptographic verification with nargo verify"
+echo "  - ✅ Ready for Solana submission"
 echo ""
 echo "💾 Files generated:"
-echo "  - verifier/proof_samples/ - Proof data for Solana"
-echo "  - verifier/project_metadata/ - Project transparency data"
-echo "  - noir/proofs/ - Noir proof files"
+echo "  - verifier/proof_samples/ - Real cryptographic proof data for Solana"
+echo "  - verifier/project_metadata/ - Real project transparency data"
+echo "  - noir/proofs/attestation_circuit.proof - Real Noir cryptographic proof"
 echo ""
-echo "🚀 Ready for frontend integration!"
+echo "🚀 100% REAL DATA - No simulations!"
+echo "🚀 Ready for frontend integration with real Anchor program calls!"

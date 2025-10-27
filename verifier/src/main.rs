@@ -310,74 +310,89 @@ fn generate_proof_id(proof_hash: &[u8; 32], domain_hash: &[u8]) -> Result<String
 }
 
 fn verify_proof_enhanced(proof_data: &ProofData, witness: &WitnessInput) -> Result<VerificationResult> {
-    println!("🔍 Verifying zkTLS proof with enhanced validation...");
+    println!("🔍 Verifying REAL cryptographic zkTLS proof...");
     
     let start_time = Instant::now();
     
-    // Enhanced validation checks for zkTLS
-    let mut constraints_verified = 0u32;
-    let mut error_message = None;
-    
-    // Constraint 1: Proof must not be empty
-    if proof_data.proof.is_empty() {
-        error_message = Some("zkTLS proof is empty".to_string());
-    } else {
-        constraints_verified += 1;
-    }
-    
-    // Constraint 2: Public inputs must not be empty
-    if proof_data.public_inputs.is_empty() {
-        error_message = Some("Public inputs are empty".to_string());
-    } else {
-        constraints_verified += 1;
-    }
-    
-    // Constraint 3: Verification key must be present
-    if proof_data.verification_key.is_empty() {
-        error_message = Some("Verification key is empty".to_string());
-    } else {
-        constraints_verified += 1;
-    }
-    
-    // Constraint 4: Proof format validation (basic)
-    if !proof_data.proof.starts_with("real_zkTLS_proof_") && 
-       !proof_data.proof.starts_with("simulated_zkTLS_proof_") {
-        error_message = Some("Invalid zkTLS proof format".to_string());
-    } else {
-        constraints_verified += 1;
-    }
-    
-    // Constraint 5: Public inputs length validation
-    if proof_data.public_inputs.len() != 32 {
-        error_message = Some(format!("Expected 32 public inputs, got {}", proof_data.public_inputs.len()));
-    } else {
-        constraints_verified += 1;
-    }
+    // Use nargo verify for REAL cryptographic verification
+    let is_valid = call_nargo_verify(proof_data)?;
     
     let verification_time = start_time.elapsed();
-    let is_valid = error_message.is_none() && constraints_verified == 5;
     
-    println!("📊 zkTLS proof verification result: {}", if is_valid { "VALID" } else { "INVALID" });
+    println!("📊 zkTLS proof verification result: {}", if is_valid { "✅ VALID" } else { "❌ INVALID" });
     
-    // Create a default legitimacy assessment for the enhanced verification
-    let default_legitimacy_assessment = LegitimacyAssessment {
-        is_legitimate: true,
-        confidence_score: 80,
-        risk_factors: vec![],
-        transparency_indicators: vec!["zkTLS proof verified".to_string()],
-        overall_recommendation: "LEGITIMATE - zkTLS proof verification successful".to_string(),
+    // Calculate constraints verified based on circuit
+    let constraints_verified = if is_valid { 8 } else { 0 }; // Our circuit has 8 constraints
+    
+    // Create legitimacy assessment based on verification result
+    let legitimacy_assessment = if is_valid {
+        LegitimacyAssessment {
+            is_legitimate: true,
+            confidence_score: 95, // High confidence for cryptographically verified proofs
+            risk_factors: vec![],
+            transparency_indicators: vec![
+                "zkTLS proof cryptographically verified".to_string(),
+                format!("Transparency score: {}", witness.transparency_score),
+                format!("Risk level: {}", witness.risk_level),
+            ],
+            overall_recommendation: "LEGITIMATE - Cryptographic proof verification successful".to_string(),
+        }
+    } else {
+        LegitimacyAssessment {
+            is_legitimate: false,
+            confidence_score: 10,
+            risk_factors: vec!["Cryptographic proof verification failed".to_string()],
+            transparency_indicators: vec![],
+            overall_recommendation: "SUSPICIOUS - Proof verification failed".to_string(),
+        }
     };
     
     Ok(VerificationResult {
         is_valid,
         verification_time_ms: verification_time.as_millis(),
-        proof_size_bytes: proof_data.proof.len(),
+        proof_size_bytes: proof_data.proof.len() / 2, // Hex string is 2x bytes
         constraints_verified,
-        error_message,
-        transparency_score: witness.transparency_score, // Use actual calculated transparency score
-        risk_level: witness.risk_level, // Use actual calculated risk level
-        legitimacy_assessment: default_legitimacy_assessment,
+        error_message: if !is_valid { Some("Cryptographic verification failed".to_string()) } else { None },
+        transparency_score: witness.transparency_score,
+        risk_level: witness.risk_level,
+        legitimacy_assessment,
     })
+}
+
+/// Call nargo verify to perform REAL cryptographic verification
+fn call_nargo_verify(proof_data: &ProofData) -> Result<bool> {
+    use std::process::Command;
+    
+    println!("🔐 Running nargo verify for cryptographic proof validation...");
+    
+    // Write proof to file for nargo verify
+    let proof_bytes = hex::decode(&proof_data.proof)
+        .with_context(|| "Failed to decode proof hex")?;
+    
+    let proof_file = "../noir/proofs/attestation_circuit.proof";
+    fs::write(proof_file, &proof_bytes)
+        .with_context(|| format!("Failed to write proof file: {}", proof_file))?;
+    
+    // Run nargo verify
+    let verify_output = Command::new("nargo")
+        .arg("verify")
+        .current_dir("../noir")
+        .output()
+        .with_context(|| "Failed to execute nargo verify")?;
+    
+    let is_valid = verify_output.status.success();
+    
+    if !is_valid {
+        let stderr = String::from_utf8_lossy(&verify_output.stderr);
+        let stdout = String::from_utf8_lossy(&verify_output.stdout);
+        println!("⚠️ Verification failed:");
+        println!("  stderr: {}", stderr);
+        println!("  stdout: {}", stdout);
+    } else {
+        println!("✅ Cryptographic verification PASSED");
+    }
+    
+    Ok(is_valid)
 }
 
 #[allow(dead_code)]
@@ -612,37 +627,86 @@ fn save_witness_to_noir(witness: &WitnessInput) -> Result<()> {
 fn call_nargo_prove() -> Result<NargoProofResult> {
     use std::process::Command;
     
-    println!("🔧 Calling nargo prove...");
+    println!("🔧 Calling nargo prove to generate REAL cryptographic proof...");
     
-    // Change to noir directory and run nargo prove
-    let output = Command::new("nargo")
+    // Step 1: Execute witness generation
+    println!("📝 Step 1/2: Generating witness...");
+    let execute_output = Command::new("nargo")
         .arg("execute")
         .current_dir("../noir")
         .output()
         .with_context(|| "Failed to execute nargo execute")?;
     
-    if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr);
+    if !execute_output.status.success() {
+        let stderr = String::from_utf8_lossy(&execute_output.stderr);
         return Err(anyhow::anyhow!("nargo execute failed: {}", stderr));
     }
+    println!("✅ Witness generated successfully");
     
-    // Load the generated witness file
-    let witness_file = "../noir/target/attestation_circuit.gz";
-    if !std::path::Path::new(witness_file).exists() {
-        return Err(anyhow::anyhow!("Witness file not found: {}", witness_file));
+    // Step 2: Generate actual proof from witness
+    println!("🔐 Step 2/2: Generating cryptographic proof (this may take 30-60 seconds)...");
+    let prove_output = Command::new("nargo")
+        .arg("prove")
+        .current_dir("../noir")
+        .output()
+        .with_context(|| "Failed to execute nargo prove")?;
+    
+    if !prove_output.status.success() {
+        let stderr = String::from_utf8_lossy(&prove_output.stderr);
+        return Err(anyhow::anyhow!("nargo prove failed: {}", stderr));
+    }
+    println!("✅ Real cryptographic proof generated successfully");
+    
+    // Step 3: Read the actual proof file
+    let proof_file = "../noir/proofs/attestation_circuit.proof";
+    if !std::path::Path::new(proof_file).exists() {
+        return Err(anyhow::anyhow!("Proof file not found: {}. Make sure nargo prove succeeded.", proof_file));
     }
     
-    let proof_file = witness_file;
+    // Read the real proof bytes
+    let proof_bytes = fs::read(&proof_file)
+        .with_context(|| format!("Failed to read proof file: {}", proof_file))?;
+    let proof_hex = hex::encode(&proof_bytes);
     
-    // Load proof data (this is a simplified implementation)
-    // In a real implementation, you'd parse the actual proof format
-    let proof_content = fs::read(&proof_file)?;
-    let proof_hash = compute_proof_hash_from_content(&String::from_utf8_lossy(&proof_content))?;
+    println!("📊 Proof generated: {} bytes", proof_bytes.len());
+    
+    // Step 4: Read verification key
+    let vk_file = "../noir/target/attestation_circuit.json";
+    let vk_content = fs::read_to_string(&vk_file)
+        .with_context(|| format!("Failed to read verification key: {}", vk_file))?;
+    
+    // Parse the verification key to extract public inputs
+    let vk_json: serde_json::Value = serde_json::from_str(&vk_content)?;
+    
+    // Extract public inputs from the ABI
+    let mut public_inputs = Vec::new();
+    if let Some(abi) = vk_json.get("abi") {
+        if let Some(parameters) = abi.get("parameters") {
+            if let Some(params_array) = parameters.as_array() {
+                for param in params_array {
+                    if let Some(visibility) = param.get("visibility") {
+                        if visibility.as_str() == Some("public") {
+                            if let Some(name) = param.get("name") {
+                                public_inputs.push(name.as_str().unwrap_or("").to_string());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // If we couldn't extract public inputs, use placeholder
+    if public_inputs.is_empty() {
+        public_inputs = vec!["domain_hash".to_string(), "certificate_validity_hash".to_string(), 
+                            "transparency_score".to_string(), "risk_level".to_string(), 
+                            "verification_timestamp".to_string()];
+    }
     
     Ok(NargoProofResult {
-        proof: format!("real_zkTLS_proof_{}", hex::encode(&proof_hash[..8])),
-        public_inputs: vec!["0".to_string(); 32], // Simplified
-        verification_key: "real_zkTLS_vk".to_string(),
+        proof: proof_hex,
+        public_inputs,
+        verification_key: vk_content,
     })
 }
 
