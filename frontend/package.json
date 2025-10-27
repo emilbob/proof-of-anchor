@@ -48,7 +48,11 @@
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@vitejs/plugin-react": "^5.0.4",
+    "crypto-browserify": "^3.12.1",
+    "stream-browserify": "^3.0.0",
     "typescript": "^5.3.3",
-    "vite": "^7.1.7"
+    "util": "^0.12.5",
+    "vite": "^7.1.7",
+    "vite-plugin-node-polyfills": "^0.24.0"
   }
 }
