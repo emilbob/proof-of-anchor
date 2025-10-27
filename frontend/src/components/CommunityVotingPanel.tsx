@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ThumbsUp, ThumbsDown, Users, CheckCircle } from "lucide-react";
-import { CommunityVotingPanelProps } from "@/types";
+import { CommunityVotingPanelProps } from "../types";
 
 const CommunityVotingPanel: React.FC<CommunityVotingPanelProps> = ({
   currentRating,

@@ -1,6 +1,6 @@
 import React from "react";
 import { CheckCircle, XCircle, AlertTriangle } from "lucide-react";
-import { ProjectTransparencyCardProps } from "@/types";
+import { ProjectTransparencyCardProps } from "../types";
 
 const ProjectTransparencyCard: React.FC<ProjectTransparencyCardProps> = ({
   projectData,

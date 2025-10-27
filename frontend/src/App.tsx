@@ -21,11 +21,11 @@ import {
 } from "./types";
 
 // Import components
-import StatusIndicator from "@/components/StatusIndicator";
-import ProofGenerator from "@/components/ProofGenerator";
-import ProofVerifier from "@/components/ProofVerifier";
-import ProjectTransparencyCard from "@/components/ProjectTransparencyCard";
-import CommunityVotingPanel from "@/components/CommunityVotingPanel";
+import StatusIndicator from "./components/StatusIndicator";
+import ProofGenerator from "./components/ProofGenerator";
+import ProofVerifier from "./components/ProofVerifier";
+import ProjectTransparencyCard from "./components/ProjectTransparencyCard";
+import CommunityVotingPanel from "./components/CommunityVotingPanel";
 
 // Import services
 import {
@@ -379,6 +379,20 @@ const AppContent: React.FC = () => {
           </p>
           <div className="flex justify-center">
             <WalletMultiButton className="!bg-orange-700 hover:!bg-orange-800 !text-white" />
+          </div>
+        </div>
+
+        {/* Devnet Notice */}
+        <div className="max-w-4xl mx-auto mb-6">
+          <div className="bg-orange-50 dark:bg-orange-900/20 border-2 border-orange-500 dark:border-orange-600 rounded-lg p-4 shadow-lg">
+            <div className="text-center">
+              <p className="text-orange-900 dark:text-orange-200 font-bold text-lg">
+                Running on Solana Devnet
+              </p>
+              <p className="text-orange-700 dark:text-orange-300 text-sm">
+                This is a development environment. Use devnet SOL for testing.
+              </p>
+            </div>
           </div>
         </div>
 

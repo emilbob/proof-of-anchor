@@ -77,44 +77,65 @@ class SolanaService {
   }
 
   async submitProject(data: ProjectSubmissionData): Promise<string> {
-    if (!this.provider) {
-      throw new Error("Provider not initialized");
+    if (!this.program || !this.provider) {
+      throw new Error("Program or provider not initialized");
     }
 
-    console.log("🚀 Submitting project to Solana testnet...", data);
+    console.log(
+      "🚀 Submitting project to Solana using REAL Anchor program...",
+      data
+    );
 
     try {
-      // Use raw Solana program calls instead of Anchor to bypass IDL mismatch
-      const programId = new PublicKey(
-        "4jGQ4kaxDsPJ57u1iN8gX1X7ngBji2Z8R8ERmcVp1BLW"
+      // Convert arrays to Uint8Arrays
+      const domainHashArray = new Uint8Array(data.domainHash);
+      const certValidityHashArray = new Uint8Array(
+        data.certificateValidityHash
       );
 
-      // Create a simple transfer transaction instead of account creation
-      const transaction = new Transaction();
+      // Derive the project record PDA
+      const [projectRecordPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("project"), Buffer.from(domainHashArray)],
+        this.program.programId
+      );
 
-      // Send to a burn address that can receive SOL
-      const recipientPubkey = new PublicKey(
-        "1nc1nerator11111111111111111111111111111111"
-      ); // Burn address
-      // Make each transaction unique with timestamp-based amount
-      const timestamp = Date.now();
-      const randomOffset = Math.floor(Math.random() * 1000);
-      const transferAmount = 1000 + (timestamp % 1000) + randomOffset; // Small amount + randomness (0.000001-0.000004 SOL)
+      // Get the attestation account PDA
+      const attestationAccount = await this.getAttestationAccount();
 
-      // Add a transfer instruction (this will cost SOL for transaction fees)
-      const transferIx = SystemProgram.transfer({
-        fromPubkey: this.provider.wallet.publicKey,
-        toPubkey: recipientPubkey,
-        lamports: transferAmount,
-      });
+      console.log("📋 Project submission details:");
+      console.log("  - Domain hash:", data.domainHash.slice(0, 8), "...");
+      console.log("  - Project name:", data.projectName);
+      console.log("  - Transparency score:", data.transparencyScore);
+      console.log("  - Risk level:", data.riskLevel);
+      console.log("  - Project PDA:", projectRecordPDA.toString());
 
-      transaction.add(transferIx);
+      // Call the actual Anchor program method
+      const tx = await this.program.methods
+        .submitProject(
+          Array.from(domainHashArray),
+          data.projectName,
+          data.transparencyScore,
+          data.riskLevel,
+          Array.from(certValidityHashArray)
+        )
+        .accounts({
+          attestationAccount,
+          projectRecord: projectRecordPDA,
+          submitter: this.provider.wallet.publicKey,
+          systemProgram: SystemProgram.programId,
+        })
+        .rpc();
 
-      // Send the transaction using the wallet adapter
-      const signature = await this.provider.sendAndConfirm(transaction, []);
-
-      console.log("✅ Project submitted successfully:", signature);
-      return signature;
+      console.log(
+        "✅ Project submitted successfully via REAL Anchor program:",
+        tx
+      );
+      console.log(
+        "   Transaction: https://explorer.solana.com/tx/" +
+          tx +
+          "?cluster=devnet"
+      );
+      return tx;
     } catch (error) {
       console.error("❌ Failed to submit project:", error);
       throw error;
@@ -122,42 +143,66 @@ class SolanaService {
   }
 
   async voteOnProject(data: VoteData): Promise<string> {
-    if (!this.provider) {
-      throw new Error("Provider not initialized");
+    if (!this.program || !this.provider) {
+      throw new Error("Program or provider not initialized");
     }
 
-    console.log("🗳️ Submitting vote to Solana testnet...", data);
+    console.log(
+      "🗳️ Submitting vote to Solana using REAL Anchor program...",
+      data
+    );
 
     try {
-      // Use raw Solana program calls for real transactions
-      const programId = new PublicKey(
-        "4jGQ4kaxDsPJ57u1iN8gX1X7ngBji2Z8R8ERmcVp1BLW"
+      // Convert arrays to Uint8Arrays
+      const domainHashArray = new Uint8Array(data.domainHash);
+
+      // Derive the project record PDA
+      const [projectRecordPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("project"), Buffer.from(domainHashArray)],
+        this.program.programId
       );
 
-      const transaction = new Transaction();
+      // Derive the voter record PDA
+      const [voterRecordPDA] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("vote"),
+          Buffer.from(domainHashArray),
+          this.provider.wallet.publicKey.toBuffer(),
+        ],
+        this.program.programId
+      );
 
-      // Send to a burn address for voting transaction
-      const recipientPubkey = new PublicKey(
-        "1nc1nerator11111111111111111111111111111111"
-      ); // Burn address
-      // Make each transaction unique with timestamp-based amount
-      const timestamp = Date.now();
-      const randomOffset = Math.floor(Math.random() * 1000);
-      const transferAmount = 2000 + (timestamp % 1000) + randomOffset; // Small amount + randomness (0.000002-0.000005 SOL)
+      console.log("🗳️ Vote details:");
+      console.log("  - Is legitimate:", data.isLegitimate);
+      console.log("  - Confidence level:", data.confidenceLevel);
+      console.log("  - Voter:", this.provider.wallet.publicKey.toString());
+      console.log("  - Voter record PDA:", voterRecordPDA.toString());
 
-      // Add a transfer instruction for voting
-      const transferIx = SystemProgram.transfer({
-        fromPubkey: this.provider.wallet.publicKey,
-        toPubkey: recipientPubkey,
-        lamports: transferAmount,
-      });
+      // Call the actual Anchor program method
+      const tx = await this.program.methods
+        .voteOnProject(
+          Array.from(domainHashArray),
+          data.isLegitimate,
+          data.confidenceLevel
+        )
+        .accounts({
+          projectRecord: projectRecordPDA,
+          voterRecord: voterRecordPDA,
+          voter: this.provider.wallet.publicKey,
+          systemProgram: SystemProgram.programId,
+        })
+        .rpc();
 
-      transaction.add(transferIx);
-
-      const signature = await this.provider.sendAndConfirm(transaction, []);
-
-      console.log("✅ Vote submitted successfully:", signature);
-      return signature;
+      console.log(
+        "✅ Vote submitted successfully via REAL Anchor program:",
+        tx
+      );
+      console.log(
+        "   Transaction: https://explorer.solana.com/tx/" +
+          tx +
+          "?cluster=devnet"
+      );
+      return tx;
     } catch (error) {
       console.error("❌ Failed to submit vote:", error);
       throw error;
@@ -165,42 +210,61 @@ class SolanaService {
   }
 
   async verifyProof(data: ProofVerificationData): Promise<string> {
-    if (!this.provider) {
-      throw new Error("Provider not initialized");
+    if (!this.program || !this.provider) {
+      throw new Error("Program or provider not initialized");
     }
 
-    console.log("🔍 Verifying proof on Solana testnet...", data);
+    console.log(
+      "🔍 Verifying proof on Solana using REAL Anchor program...",
+      data
+    );
 
     try {
-      // Use raw Solana program calls for real transactions
-      const programId = new PublicKey(
-        "4jGQ4kaxDsPJ57u1iN8gX1X7ngBji2Z8R8ERmcVp1BLW"
+      // Convert arrays to Uint8Arrays
+      const proofHashArray = new Uint8Array(data.proofHash);
+
+      // Derive the proof record PDA
+      const [proofRecordPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("proof"), Buffer.from(proofHashArray)],
+        this.program.programId
       );
 
-      const transaction = new Transaction();
+      // Get the attestation account PDA
+      const attestationAccount = await this.getAttestationAccount();
 
-      // Send to a burn address for proof verification transaction
-      const recipientPubkey = new PublicKey(
-        "1nc1nerator11111111111111111111111111111111"
-      ); // Burn address
-      // Make each transaction unique with timestamp-based amount
-      const timestamp = Date.now();
-      const randomOffset = Math.floor(Math.random() * 1000);
-      const transferAmount = 3000 + (timestamp % 1000) + randomOffset; // Small amount + randomness (0.000003-0.000006 SOL)
+      console.log("🔍 Proof verification details:");
+      console.log("  - Proof hash:", data.proofHash.slice(0, 8), "...");
+      console.log("  - Is valid:", data.isValid);
+      console.log("  - Public inputs length:", data.publicInputs.length);
+      console.log("  - Proof record PDA:", proofRecordPDA.toString());
 
-      // Add a transfer instruction for proof verification
-      const transferIx = SystemProgram.transfer({
-        fromPubkey: this.provider.wallet.publicKey,
-        toPubkey: recipientPubkey,
-        lamports: transferAmount,
-      });
+      // Call the actual Anchor program method
+      const tx = await this.program.methods
+        .verifyZkTlsProof(
+          Array.from(new Uint8Array(data.domainHash)),
+          Array.from(proofHashArray),
+          Array.from(new Uint8Array(data.publicInputs)),
+          data.isValid
+        )
+        .accounts({
+          attestationAccount,
+          proofRecord: proofRecordPDA,
+          submitter: this.provider.wallet.publicKey,
+          verifier: this.provider.wallet.publicKey,
+          systemProgram: SystemProgram.programId,
+        })
+        .rpc();
 
-      transaction.add(transferIx);
-
-      const signature = await this.provider.sendAndConfirm(transaction, []);
-
-      console.log("✅ Proof verified successfully:", signature);
-      return signature;
+      console.log(
+        "✅ Proof verified successfully via REAL Anchor program:",
+        tx
+      );
+      console.log(
+        "   Transaction: https://explorer.solana.com/tx/" +
+          tx +
+          "?cluster=devnet"
+      );
+      return tx;
     } catch (error) {
       console.error("❌ Failed to verify proof:", error);
       throw error;

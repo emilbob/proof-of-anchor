@@ -1,6 +1,6 @@
 import React from "react";
 import { CheckCircle, XCircle, Shield, Vote } from "lucide-react";
-import { StatusIndicatorProps } from "@/types";
+import { StatusIndicatorProps } from "../types";
 
 const StatusIndicator: React.FC<StatusIndicatorProps> = ({
   status,

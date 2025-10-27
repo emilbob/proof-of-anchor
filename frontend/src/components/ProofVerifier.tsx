@@ -1,6 +1,6 @@
 import React from "react";
 import { Eye } from "lucide-react";
-import { ProofVerifierProps } from "@/types";
+import { ProofVerifierProps } from "../types";
 
 const ProofVerifier: React.FC<ProofVerifierProps> = ({
   onVerify,

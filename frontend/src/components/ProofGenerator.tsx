@@ -1,6 +1,6 @@
 import React from "react";
 import { Upload } from "lucide-react";
-import { ProofGeneratorProps } from "@/types";
+import { ProofGeneratorProps } from "../types";
 
 const ProofGenerator: React.FC<ProofGeneratorProps> = ({
   onGenerate,
