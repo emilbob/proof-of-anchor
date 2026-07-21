@@ -19,6 +19,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Install Noir toolchain (verifier's zkTLS tests execute nargo)
+        run: |
+          curl -sL https://raw.githubusercontent.com/noir-lang/noirup/main/install | bash
+          "$HOME/.nargo/bin/noirup" -v v1.0.0-beta.22   # pinned: 'latest' can resolve to a release with no binary assets
+          echo "$HOME/.nargo/bin" >> "$GITHUB_PATH"
       - name: Build & test (auto-detected toolchain)
         run: |
           set -e
