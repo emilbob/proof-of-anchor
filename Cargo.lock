@@ -420,7 +420,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "94893f1e0c6eeab764ade8dc4c0db24caf4fe7cbbaafc0eba0a9030f447b5185"
 dependencies = [
  "num-traits",
- "rand 0.8.5",
+ "rand 0.8.7",
 ]
 
 [[package]]
@@ -923,9 +923,9 @@ checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
 
 [[package]]
 name = "chrono"
-version = "0.4.42"
+version = "0.4.45"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "145052bdd345b87320e369255277e3fb5152762ad123a901ef5c262dd38fe8d2"
+checksum = "1aa79e62e7697b8e29b513a68abacf485adcd1fe8284a4316c5ae868e6633327"
 dependencies = [
  "iana-time-zone",
  "js-sys",
@@ -2875,7 +2875,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5d5285893bb5eb82e6aaf5d59ee909a06a16737a8970984dd7746ba9283498d6"
 dependencies = [
  "phf_shared 0.10.0",
- "rand 0.8.5",
+ "rand 0.8.7",
 ]
 
 [[package]]
@@ -2885,7 +2885,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3c80231409c20246a13fddb31776fb942c38553c51e871f8cbd687a4cfb5843d"
 dependencies = [
  "phf_shared 0.11.3",
- "rand 0.8.5",
+ "rand 0.8.7",
 ]
 
 [[package]]
@@ -3083,7 +3083,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "141bf7dfde2fbc246bfd3fe12f2455aa24b0fbd9af535d8c86c7bd1381ff2b1a"
 dependencies = [
  "bytes",
- "rand 0.8.5",
+ "rand 0.8.7",
  "ring 0.16.20",
  "rustc-hash",
  "rustls",
@@ -3137,9 +3137,9 @@ dependencies = [
 
 [[package]]
 name = "rand"
-version = "0.8.5"
+version = "0.8.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34af8d1a0e25924bc5b7c43c079c942339d8f0a8b57c39049bef581b46327404"
+checksum = "22f6172bdec972074665ed81ed53b71da00bfc44b65a753cfde883ec4c702a1a"
 dependencies = [
  "libc",
  "rand_chacha 0.3.1",
@@ -3245,9 +3245,9 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.11.3"
+version = "1.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b5288124840bee7b386bc413c487869b360b2b4ec421ea56425128692f2a82c"
+checksum = "f020237b6c8eed93db2e2cb53c00c60a8e1bc73da7d073199a1180401450218d"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -3257,9 +3257,9 @@ dependencies = [
 
 [[package]]
 name = "regex-automata"
-version = "0.4.11"
+version = "0.4.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "833eb9ce86d40ef33cb1306d8accf7bc8ec2bfea4355cbdebb3df68b40925cad"
+checksum = "8fcfdb36bda0c880c5931cdc7a2bcdc8ba4556847b9d912bca70bc94708711ad"
 dependencies = [
  "aho-corasick",
  "memchr",
@@ -3268,9 +3268,9 @@ dependencies = [
 
 [[package]]
 name = "regex-syntax"
-version = "0.8.6"
+version = "0.8.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "caf4aa5b0f434c91fe5c7f1ecb6a5ece2130b02ad2a590589dda5146df959001"
+checksum = "d6f6ff9a378485b298a5286656da665ba74413d36db0979633275d2e708145d4"
 
 [[package]]
 name = "reqwest"
@@ -3617,9 +3617,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.150"
+version = "1.0.151"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e8014e44b4736ed0538adeecded0fce2a272f22dc9578a7eb6b2d9993c74cfb9"
+checksum = "c841b55ecdae098c80dcae9cf767f6f8a0c2cdb3416bbef72181df4d0fe73f14"
 dependencies = [
  "itoa",
  "memchr",
@@ -3910,7 +3910,7 @@ dependencies = [
  "futures-util",
  "indexmap 2.11.4",
  "log",
- "rand 0.8.5",
+ "rand 0.8.7",
  "rayon",
  "rcgen",
  "solana-measure",
@@ -4004,7 +4004,7 @@ dependencies = [
  "crossbeam-channel",
  "log",
  "nix",
- "rand 0.8.5",
+ "rand 0.8.7",
  "serde",
  "serde_derive",
  "socket2 0.5.10",
@@ -4032,7 +4032,7 @@ dependencies = [
  "libc",
  "log",
  "nix",
- "rand 0.8.5",
+ "rand 0.8.7",
  "rayon",
  "rustc_version",
  "serde",
@@ -4081,7 +4081,7 @@ dependencies = [
  "num-derive 0.4.2",
  "num-traits",
  "parking_lot",
- "rand 0.8.5",
+ "rand 0.8.7",
  "rustc_version",
  "rustversion",
  "serde",
@@ -4115,7 +4115,7 @@ dependencies = [
  "num-derive 0.4.2",
  "num-traits",
  "percentage",
- "rand 0.8.5",
+ "rand 0.8.7",
  "rustc_version",
  "serde",
  "solana-frozen-abi",
@@ -4303,7 +4303,7 @@ dependencies = [
  "qstring",
  "qualifier_attr",
  "rand 0.7.3",
- "rand 0.8.5",
+ "rand 0.8.7",
  "rustc_version",
  "rustversion",
  "serde",
@@ -4364,7 +4364,7 @@ dependencies = [
  "pkcs8",
  "quinn",
  "quinn-proto",
- "rand 0.8.5",
+ "rand 0.8.7",
  "rcgen",
  "rustls",
  "smallvec",
@@ -4534,7 +4534,7 @@ dependencies = [
  "hash32",
  "libc",
  "log",
- "rand 0.8.5",
+ "rand 0.8.7",
  "rustc-demangle",
  "scroll",
  "thiserror 1.0.69",
@@ -5316,7 +5316,7 @@ dependencies = [
  "http",
  "httparse",
  "log",
- "rand 0.8.5",
+ "rand 0.8.7",
  "rustls",
  "sha1",
  "thiserror 1.0.69",
@@ -5455,7 +5455,7 @@ dependencies = [
  "anyhow",
  "chrono",
  "hex",
- "rand 0.8.5",
+ "rand 0.8.7",
  "regex",
  "reqwest",
  "rustls",
