@@ -8,7 +8,13 @@ import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { Shield, AlertTriangle, Star, Users } from "lucide-react";
+import {
+  Shield,
+  AlertTriangle,
+  Star,
+  Users,
+  CheckCircle,
+} from "lucide-react";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import ThemeToggle from "./components/ThemeToggle";
 
@@ -42,6 +48,29 @@ import {
 
 // Import wallet adapter CSS
 import "@solana/wallet-adapter-react-ui/styles.css";
+
+const FEATURES = [
+  {
+    icon: Shield,
+    title: "zkTLS Verification",
+    body: "Prove TLS certificate validity without revealing sensitive data",
+  },
+  {
+    icon: Star,
+    title: "Transparency Ratings",
+    body: "Score projects on transparency and legitimacy indicators",
+  },
+  {
+    icon: Users,
+    title: "Community Voting",
+    body: "Crowdsourced analysis to separate legitimate projects from scams",
+  },
+  {
+    icon: AlertTriangle,
+    title: "Risk Assessment",
+    body: "Detect potential scam indicators across multiple signals",
+  },
+] as const;
 
 // Main app component that uses wallet
 const AppContent: React.FC = () => {
@@ -359,53 +388,64 @@ const AppContent: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 dark:from-logo-dark dark:to-logo-dark">
+    <div className="min-h-screen">
       <ThemeToggle />
-      <div className="container mx-auto px-4 py-8">
+
+      {/* Status rail */}
+      <div className="border-b hairline">
+        <div className="max-w-4xl mx-auto px-4 h-10 flex items-center justify-between">
+          <span className="label">proof_of_anchor / zktls</span>
+          <span className="flex items-center gap-2 label">
+            <span className="h-1.5 w-1.5 bg-accent inline-block" />
+            solana devnet
+          </span>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-12">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="mb-12">
           <div
-            className="flex items-center justify-center gap-4 mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+            className="inline-flex items-center gap-4 mb-6 cursor-pointer hover:opacity-70 transition-opacity"
             onClick={() => window.location.reload()}
           >
-            {/* Logo Image */}
-            <img src="/poa.png" alt="Proof Anchor Logo" className="w-12 h-12" />
-
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+            {/* poa.png carries a baked-in near-black background, so it is
+                framed as a deliberate badge rather than fought on light */}
+            <span className="inline-flex shrink-0 border hairline-strong">
+              <img
+                src="/poa.png"
+                alt="Proof Anchor Logo"
+                className="w-10 h-10"
+              />
+            </span>
+            <h1 className="text-3xl sm:text-4xl tracking-tight text-ink">
               Proof of Anchor
             </h1>
           </div>
 
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-            zkTLS Transparency Ratings & Project Legitimacy Verification
+          <p className="text-sm text-ink-dim max-w-xl leading-relaxed mb-8">
+            zkTLS transparency ratings &amp; project legitimacy verification.
+            Trustless scoring for any domain, anchored on Solana.
           </p>
-          <div className="flex justify-center">
-            <WalletMultiButton className="!bg-orange-700 hover:!bg-orange-800 !text-white" />
-          </div>
+
+          <WalletMultiButton />
         </div>
 
         {/* Devnet Notice */}
-        <div className="max-w-4xl mx-auto mb-6">
-          <div className="bg-orange-50 dark:bg-orange-900/20 border-2 border-orange-500 dark:border-orange-600 rounded-lg p-4 shadow-lg">
-            <div className="text-center">
-              <p className="text-orange-900 dark:text-orange-200 font-bold text-lg">
-                Running on Solana Devnet
-              </p>
-              <p className="text-orange-700 dark:text-orange-300 text-sm">
-                This is a development environment. Use devnet SOL for testing.
-              </p>
-            </div>
+        <div className="notice text-accent mb-6">
+          <div className="text-xs text-ink-dim">
+            <span className="text-accent">Running on Solana Devnet.</span> This
+            is a development environment — use devnet SOL for testing.
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto">
+        <div>
           {/* Wallet Connection Status */}
           {!connected && (
-            <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-              <p className="text-yellow-800 dark:text-yellow-200 text-center">
-                🔗 Please connect your wallet and enter a project domain to
-                analyze
+            <div className="notice text-accent mb-6">
+              <p className="text-xs text-ink-dim">
+                Connect your wallet and enter a project domain to analyze.
               </p>
             </div>
           )}
@@ -416,48 +456,52 @@ const AppContent: React.FC = () => {
             analyzedDomains.has(projectDomain.trim().toLowerCase()) &&
             proofStatus !== "generating" &&
             proofStatus !== "pending_vote" && (
-              <div className="mt-4 p-4 bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg">
-                <p className="text-orange-800 dark:text-orange-200 text-center">
-                  ⚠️ You have already analyzed "{projectDomain.trim()}". Please
-                  enter a different domain to analyze.
+              <div className="notice text-accent mb-6">
+                <p className="text-xs text-ink-dim">
+                  Already analyzed "{projectDomain.trim()}" — enter a different
+                  domain.
                 </p>
-                <div className="text-center mt-2">
-                  <button
-                    onClick={() => setAnalyzedDomains(new Set())}
-                    className="text-sm text-orange-700 dark:text-orange-300 underline hover:text-orange-900 dark:hover:text-orange-100"
-                  >
-                    Clear analyzed domains history
-                  </button>
-                </div>
+                <button
+                  onClick={() => setAnalyzedDomains(new Set())}
+                  className="mt-2 text-[10px] uppercase tracking-[0.18em] text-accent hover:underline"
+                >
+                  Clear history
+                </button>
               </div>
             )}
 
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 mb-8 mt-8">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 text-center">
-              zkTLS Proof Generation & Transparency Analysis
-            </h2>
+          <div className="panel p-6 sm:p-8 mb-8">
+            <div className="label mb-6">
+              zkTLS proof generation &amp; transparency analysis
+            </div>
 
             {/* Project Domain Input */}
             <div className="mb-6">
-              <label
-                htmlFor="project-domain"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Project Domain to Analyze
+              <label htmlFor="project-domain" className="label-dim block mb-2">
+                Project domain to analyze
               </label>
-              <input
-                type="text"
-                id="project-domain"
-                value={projectDomain}
-                onChange={(e) => setProjectDomain(e.target.value)}
-                placeholder="e.g., github.com, uniswap.org, ethereum.org"
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-center text-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                disabled={
-                  proofStatus === "generating" || proofStatus === "verifying"
-                }
-              />
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 text-center">
-                Enter any domain to test the transparency analysis system
+              <div className="flex items-stretch">
+                <span
+                  className="flex items-center px-3 border border-r-0 hairline
+                             bg-surface-2 text-accent text-sm select-none"
+                  aria-hidden="true"
+                >
+                  &gt;
+                </span>
+                <input
+                  type="text"
+                  id="project-domain"
+                  value={projectDomain}
+                  onChange={(e) => setProjectDomain(e.target.value)}
+                  placeholder="github.com, uniswap.org, ethereum.org"
+                  className="input-terminal"
+                  disabled={
+                    proofStatus === "generating" || proofStatus === "verifying"
+                  }
+                />
+              </div>
+              <p className="text-xs text-ink-muted mt-2">
+                Enter any domain to run the transparency analysis
               </p>
             </div>
 
@@ -469,7 +513,7 @@ const AppContent: React.FC = () => {
             />
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3">
               <ProofGenerator
                 onGenerate={handleGenerateProof}
                 disabled={
@@ -503,35 +547,37 @@ const AppContent: React.FC = () => {
 
             {/* Project Transparency Analysis */}
             {projectData && legitimacyAssessment && (
-              <div className="mt-8 space-y-6">
-                <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                    Project Transparency Analysis
-                  </h3>
+              <div className="mt-8">
+                <div className="border-t hairline pt-6">
+                  <div className="label mb-4">project transparency analysis</div>
 
                   {/* Voting Requirement Message */}
                   {proofStatus === "pending_vote" && (
-                    <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                      <p className="text-blue-800 dark:text-blue-200 text-center font-medium">
-                        🗳️ Analysis Complete! Please vote on this project's
-                        legitimacy to finalize the assessment.
+                    <div className="notice text-accent mb-6">
+                      <p className="text-xs text-ink-dim">
+                        Analysis complete — vote on this project's legitimacy to
+                        finalize the assessment.
                       </p>
                     </div>
                   )}
 
                   {/* Verification Complete Success Message */}
                   {proofStatus === "verification_complete" && (
-                    <div className="mb-6 p-6 bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-lg">
-                      <div className="text-center">
-                        <div className="text-4xl mb-2">🎉</div>
-                        <h3 className="text-xl font-bold text-green-800 dark:text-green-200 mb-2">
-                          Analysis Complete!
-                        </h3>
-                        <p className="text-green-700 dark:text-green-300 font-medium">
-                          {verificationResult
-                            ? "Project verified successfully with community consensus!"
-                            : "Verification completed with community input."}
-                        </p>
+                    <div className="bg-surface-2 border hairline p-6 mb-6">
+                      <div className="flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-ok shrink-0 mt-0.5" />
+                        <div>
+                          <div className="text-sm text-ok mb-1">
+                            Analysis complete
+                          </div>
+                          <p className="text-xs text-ink-dim">
+                            {verificationResult
+                              ? "Project verified successfully with community consensus."
+                              : "Verification completed with community input."}
+                          </p>
+                        </div>
+                      </div>
+                      <div>
                         <button
                           onClick={() => {
                             setProofStatus("idle");
@@ -543,9 +589,9 @@ const AppContent: React.FC = () => {
                             setProjectDomain("");
                             // Note: We keep analyzedDomains to prevent re-analysis of same domains
                           }}
-                          className="mt-4 px-6 py-3 bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors font-medium"
+                          className="btn-ghost mt-5"
                         >
-                          Analyze Another Project
+                          Analyze another project
                         </button>
                       </div>
                     </div>
@@ -590,46 +636,24 @@ const AppContent: React.FC = () => {
           </div>
 
           {/* Features Grid */}
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
-              <Shield className="h-12 w-12 text-orange-700 dark:text-orange-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                zkTLS Verification
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Prove TLS certificate validity without revealing sensitive data
-              </p>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
-              <Star className="h-12 w-12 text-green-700 dark:text-green-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                Transparency Ratings
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Score projects based on transparency and legitimacy indicators
-              </p>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
-              <Users className="h-12 w-12 text-blue-700 dark:text-blue-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                Community Voting
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Crowdsourced analysis to identify legitimate projects vs scams
-              </p>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
-              <AlertTriangle className="h-12 w-12 text-red-700 dark:text-red-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                Risk Assessment
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Advanced algorithms to detect potential scam indicators
-              </p>
-            </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-line/15 border hairline">
+            {FEATURES.map((feature, i) => (
+              <div
+                key={feature.title}
+                className="bg-surface p-6 hover:bg-surface-2 transition-colors"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <feature.icon className="h-5 w-5 text-accent" />
+                  <span className="label">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                <h3 className="text-sm text-ink mb-2">{feature.title}</h3>
+                <p className="text-xs text-ink-dim leading-relaxed">
+                  {feature.body}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

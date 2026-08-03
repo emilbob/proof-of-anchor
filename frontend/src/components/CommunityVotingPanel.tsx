@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-import { ThumbsUp, ThumbsDown, Users, CheckCircle } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Users, CheckCircle, ArrowRight } from "lucide-react";
 import { CommunityVotingPanelProps } from "../types";
+import Meter, {
+  MeterState,
+  QUALITY_WORDS,
+  CONFIDENCE_WORDS,
+} from "./Meter";
 
 const CommunityVotingPanel: React.FC<CommunityVotingPanelProps> = ({
   currentRating,
@@ -35,160 +40,142 @@ const CommunityVotingPanel: React.FC<CommunityVotingPanelProps> = ({
     }
   };
 
-  const getConfidenceColor = (level: number) => {
-    if (level >= 8) return "text-green-600";
-    if (level >= 6) return "text-yellow-600";
-    return "text-red-600";
-  };
+  const consensusState = (score: number): MeterState =>
+    score >= 70 ? "ok" : score >= 50 ? "watch" : "alert";
 
-  const getConfidenceLabel = (level: number) => {
-    if (level >= 8) return "High Confidence";
-    if (level >= 6) return "Medium Confidence";
-    return "Low Confidence";
-  };
+  const confidenceState = (level: number): MeterState =>
+    level >= 8 ? "ok" : level >= 6 ? "watch" : "alert";
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
-      <div className="flex items-center justify-between mb-4">
-        <h4 className="text-lg font-semibold text-gray-900">
-          Community Voting
-        </h4>
-        <div className="flex items-center text-sm text-gray-600">
-          <Users className="h-4 w-4 mr-1" />
-          {currentRating.totalVotes} votes
+    <div className="panel p-6">
+      <div className="flex items-center justify-between gap-4 mb-6">
+        <div>
+          <div className="label mb-1">consensus</div>
+          <h4 className="text-base text-ink">Community Voting</h4>
+        </div>
+        <div className="flex items-center gap-2 text-xs text-ink-dim shrink-0">
+          <Users className="h-3.5 w-3.5" />
+          <span className="tabular-nums">{currentRating.totalVotes}</span>
+          <span className="label">
+            {currentRating.totalVotes === 1 ? "vote" : "votes"}
+          </span>
         </div>
       </div>
 
-      {/* Current Rating */}
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700">
-            Current Rating
+        <Meter
+          label="current rating"
+          value={currentRating.finalScore}
+          max={100}
+          display={`${currentRating.finalScore}%`}
+          state={consensusState(currentRating.finalScore)}
+          words={QUALITY_WORDS}
+          segments={20}
+        />
+        <div className="flex justify-between mt-2">
+          <span className="label">
+            {currentRating.negativeVotes} negative
           </span>
-          <span className="text-lg font-bold text-gray-900">
-            {currentRating.finalScore}%
+          <span className="label">
+            {currentRating.positiveVotes} positive
           </span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-          <div
-            className={`h-2 rounded-full ${
-              currentRating.finalScore >= 70
-                ? "bg-green-500"
-                : currentRating.finalScore >= 50
-                ? "bg-yellow-500"
-                : "bg-red-500"
-            }`}
-            style={{ width: `${currentRating.finalScore}%` }}
-          ></div>
-        </div>
-        <div className="flex justify-between text-xs text-gray-500">
-          <span>{currentRating.negativeVotes} Negative</span>
-          <span>{currentRating.positiveVotes} Positive</span>
         </div>
       </div>
 
-      {/* Vote Buttons */}
-      <div className="mb-4">
-        <h5 className="text-sm font-medium text-gray-700 mb-3">
-          Is this project legitimate?
-        </h5>
+      {/* Vote */}
+      <div className="mb-6 pt-5 border-t hairline">
+        <div className="label mb-3">is this project legitimate?</div>
 
-        {/* Success message immediately after voting */}
         {justVoted && (
-          <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-center">
-              <CheckCircle className="h-5 w-5 text-blue-600 mr-2" />
-              <span className="text-sm text-blue-700 font-medium">
-                ✅ Vote submitted! You voted:{" "}
-                {userVote?.isLegitimate ? "Legitimate" : "Suspicious"}{" "}
-                (Confidence: {userVote?.confidenceLevel}/10)
-              </span>
-            </div>
-            <div className="mt-2 p-2 bg-blue-100 rounded border border-blue-300">
-              <span className="text-sm text-blue-800 font-medium">
-                🔍 Next step: Click "Verify Proof" to complete the analysis!
-              </span>
+          <div className="notice text-ok mb-3">
+            <div className="flex items-start gap-2">
+              <CheckCircle className="h-4 w-4 shrink-0 mt-px" />
+              <div className="text-xs text-ink-dim">
+                <div>
+                  Vote submitted —{" "}
+                  <span className="text-ok">
+                    {userVote?.isLegitimate ? "legitimate" : "suspicious"}
+                  </span>
+                  , confidence {userVote?.confidenceLevel}/10
+                </div>
+                <div className="flex items-center gap-1.5 mt-2 text-accent">
+                  <ArrowRight className="h-3 w-3 shrink-0" />
+                  <span>Next: click Verify Proof to complete the analysis</span>
+                </div>
+              </div>
             </div>
           </div>
         )}
 
-        <div className="flex space-x-3">
+        <div className="flex gap-3">
           <button
             onClick={() => handleVote(true)}
             disabled={isVoting || hasVoted}
-            className={`flex-1 flex items-center justify-center px-4 py-2 rounded-lg border-2 transition-colors ${
+            className={`btn flex-1 ${
               selectedVote === true
-                ? "border-green-500 bg-green-50 text-green-700"
-                : "border-gray-200 hover:border-green-300 text-gray-700"
-            } ${isVoting || hasVoted ? "opacity-50 cursor-not-allowed" : ""}`}
+                ? "text-ok border-ok bg-ok/10"
+                : "text-ink-dim hairline hover:text-ok hover:border-ok/45"
+            }`}
           >
-            <ThumbsUp className="h-5 w-5 mr-2" />
+            <ThumbsUp className="h-4 w-4" />
             Legitimate
           </button>
           <button
             onClick={() => handleVote(false)}
             disabled={isVoting || hasVoted}
-            className={`flex-1 flex items-center justify-center px-4 py-2 rounded-lg border-2 transition-colors ${
+            className={`btn flex-1 ${
               selectedVote === false
-                ? "border-red-500 bg-red-50 text-red-700"
-                : "border-gray-200 hover:border-red-300 text-gray-700"
-            } ${isVoting || hasVoted ? "opacity-50 cursor-not-allowed" : ""}`}
+                ? "text-danger border-danger bg-danger/10"
+                : "text-ink-dim hairline hover:text-danger hover:border-danger/45"
+            }`}
           >
-            <ThumbsDown className="h-5 w-5 mr-2" />
+            <ThumbsDown className="h-4 w-4" />
             Suspicious
           </button>
         </div>
       </div>
 
-      {/* Confidence Level */}
-      <div className="mb-4">
-        <h5 className="text-sm font-medium text-gray-700 mb-2">
-          Confidence Level: {confidenceLevel}/10
-        </h5>
-        <div className="flex items-center space-x-2">
-          <input
-            type="range"
-            min="1"
-            max="10"
-            value={confidenceLevel}
-            onChange={(e) => setConfidenceLevel(Number(e.target.value))}
-            disabled={hasVoted}
-            className={`flex-1 h-2 bg-gray-200 rounded-lg appearance-none ${
-              hasVoted ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-            }`}
-          />
-          <span
-            className={`text-sm font-medium ${getConfidenceColor(
-              confidenceLevel
-            )}`}
-          >
-            {getConfidenceLabel(confidenceLevel)}
-          </span>
-        </div>
+      {/* Confidence */}
+      <div className="mb-6">
+        <Meter
+          label="confidence level"
+          value={confidenceLevel}
+          max={10}
+          display={`${confidenceLevel}/10`}
+          state={confidenceState(confidenceLevel)}
+          words={CONFIDENCE_WORDS}
+          segments={10}
+        />
+        <input
+          type="range"
+          min="1"
+          max="10"
+          value={confidenceLevel}
+          onChange={(e) => setConfidenceLevel(Number(e.target.value))}
+          disabled={hasVoted}
+          aria-label="Confidence level"
+          className={`w-full mt-3 accent-accent ${
+            hasVoted ? "cursor-not-allowed opacity-40" : "cursor-pointer"
+          }`}
+        />
       </div>
 
-      {/* Verification Status */}
       {currentRating.verified && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
-          <div className="flex items-center text-green-700">
-            <CheckCircle className="h-5 w-5 mr-2" />
-            <span className="text-sm font-medium">
-              Project Verified by Community
-            </span>
+        <div className="notice text-ok mb-6">
+          <div className="flex items-center gap-2 text-xs text-ink-dim">
+            <CheckCircle className="h-4 w-4 text-ok shrink-0" />
+            <span>Project verified by community</span>
           </div>
         </div>
       )}
 
-      {/* Voting Guidelines */}
-      <div className="bg-gray-50 rounded-lg p-3">
-        <h6 className="text-xs font-medium text-gray-700 mb-1">
-          Voting Guidelines
-        </h6>
-        <ul className="text-xs text-gray-600 space-y-1">
-          <li>• Consider transparency indicators</li>
-          <li>• Evaluate risk factors</li>
-          <li>• Check for scam patterns</li>
-          <li>• Vote based on evidence</li>
+      <div className="bg-surface-2 border hairline p-4">
+        <div className="label mb-2">voting guidelines</div>
+        <ul className="text-xs text-ink-dim space-y-1">
+          <li>— Consider transparency indicators</li>
+          <li>— Evaluate risk factors</li>
+          <li>— Check for scam patterns</li>
+          <li>— Vote based on evidence</li>
         </ul>
       </div>
     </div>

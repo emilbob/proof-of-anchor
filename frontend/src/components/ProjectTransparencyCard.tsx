@@ -1,166 +1,120 @@
 import React from "react";
-import { CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import { CheckCircle, XCircle, AlertTriangle, Circle } from "lucide-react";
 import { ProjectTransparencyCardProps } from "../types";
+import Meter, { MeterState, QUALITY_WORDS } from "./Meter";
 
 const ProjectTransparencyCard: React.FC<ProjectTransparencyCardProps> = ({
   projectData,
   legitimacyAssessment,
 }) => {
-  const getTransparencyColor = (score: number) => {
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
-    return "text-red-600";
-  };
+  const transparencyState = (score: number): MeterState =>
+    score >= 80 ? "ok" : score >= 60 ? "watch" : "alert";
 
-  const getRiskColor = (level: number) => {
-    if (level <= 3) return "text-green-600";
-    if (level <= 6) return "text-yellow-600";
-    return "text-red-600";
-  };
+  // Risk is inverted — a low number is the good outcome
+  const riskState = (level: number): MeterState =>
+    level <= 3 ? "ok" : level <= 6 ? "watch" : "alert";
+
+  const indicators: { present: boolean; text: string }[] = [
+    { present: projectData.metadata.hasPublicGithub, text: "Public GitHub repository" },
+    { present: projectData.metadata.hasDocumentedRoadmap, text: "Documented roadmap" },
+    { present: projectData.metadata.hasAuditReports, text: "Security audit reports" },
+    { present: projectData.metadata.hasTeamVerification, text: "Team verification" },
+    { present: projectData.metadata.hasTokenEconomics, text: "Token economics" },
+  ];
+
+  const isLegit = legitimacyAssessment.isLegitimate;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg">
-      <div className="flex items-center justify-between mb-4">
-        <h4 className="text-lg font-semibold text-gray-900">
-          {projectData.domain}
-        </h4>
+    <div className="panel p-6">
+      {/* Header — verdict carries icon + word + color */}
+      <div className="flex items-start justify-between gap-4 mb-6">
+        <div className="min-w-0">
+          <div className="label mb-1">target</div>
+          <h4 className="text-base text-ink break-all">{projectData.domain}</h4>
+        </div>
         <div
-          className={`flex items-center ${
-            legitimacyAssessment.isLegitimate
-              ? "text-green-600"
-              : "text-red-600"
+          className={`flex items-center gap-2 shrink-0 px-2 py-1 border ${
+            isLegit
+              ? "text-ok border-ok/45"
+              : "text-danger border-danger/45"
           }`}
         >
-          {legitimacyAssessment.isLegitimate ? (
-            <CheckCircle className="h-5 w-5 mr-1" />
+          {isLegit ? (
+            <CheckCircle className="h-3.5 w-3.5" />
           ) : (
-            <XCircle className="h-5 w-5 mr-1" />
+            <XCircle className="h-3.5 w-3.5" />
           )}
-          <span className="text-sm font-medium">
-            {legitimacyAssessment.isLegitimate ? "LEGITIMATE" : "SUSPICIOUS"}
+          <span className="text-[10px] uppercase tracking-[0.18em]">
+            {isLegit ? "legitimate" : "suspicious"}
           </span>
         </div>
       </div>
 
-      {/* Transparency Score */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700">
-            Transparency Score
-          </span>
-          <span
-            className={`text-lg font-bold ${getTransparencyColor(
-              projectData.transparencyScore
-            )}`}
-          >
-            {projectData.transparencyScore}/100
-          </span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className={`h-2 rounded-full ${
-              projectData.transparencyScore >= 80
-                ? "bg-green-500"
-                : projectData.transparencyScore >= 60
-                ? "bg-yellow-500"
-                : "bg-red-500"
-            }`}
-            style={{ width: `${projectData.transparencyScore}%` }}
-          ></div>
+      <div className="space-y-5 mb-6">
+        <Meter
+          label="transparency score"
+          value={projectData.transparencyScore}
+          max={100}
+          display={`${projectData.transparencyScore}/100`}
+          state={transparencyState(projectData.transparencyScore)}
+          words={QUALITY_WORDS}
+          segments={20}
+        />
+        <Meter
+          label="risk level"
+          value={projectData.riskLevel}
+          max={10}
+          display={`${projectData.riskLevel}/10`}
+          state={riskState(projectData.riskLevel)}
+          segments={10}
+        />
+      </div>
+
+      {/* Indicators — present and absent both listed, so the reader sees
+          the full checklist rather than only what passed */}
+      <div className="mb-6 pt-5 border-t hairline">
+        <div className="label mb-3">transparency indicators</div>
+        <div className="space-y-1.5">
+          {indicators.map((indicator) => (
+            <div
+              key={indicator.text}
+              className={`flex items-center gap-2 text-xs ${
+                indicator.present ? "text-ink-dim" : "text-ink-muted"
+              }`}
+            >
+              {indicator.present ? (
+                <CheckCircle className="h-3.5 w-3.5 text-ok shrink-0" />
+              ) : (
+                <Circle className="h-3.5 w-3.5 shrink-0" />
+              )}
+              <span className={indicator.present ? "" : "line-through"}>
+                {indicator.text}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Risk Level */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700">Risk Level</span>
-          <span
-            className={`text-lg font-bold ${getRiskColor(
-              projectData.riskLevel
-            )}`}
-          >
-            {projectData.riskLevel}/10
-          </span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className={`h-2 rounded-full ${
-              projectData.riskLevel <= 3
-                ? "bg-green-500"
-                : projectData.riskLevel <= 6
-                ? "bg-yellow-500"
-                : "bg-red-500"
-            }`}
-            style={{ width: `${projectData.riskLevel * 10}%` }}
-          ></div>
-        </div>
-      </div>
-
-      {/* Transparency Indicators */}
-      <div className="mb-4">
-        <h5 className="text-sm font-medium text-gray-700 mb-2">
-          Transparency Indicators
-        </h5>
-        <div className="space-y-2">
-          {projectData.metadata.hasPublicGithub && (
-            <div className="flex items-center text-sm text-green-600">
-              <CheckCircle className="h-4 w-4 mr-2" />
-              Public GitHub Repository
-            </div>
-          )}
-          {projectData.metadata.hasDocumentedRoadmap && (
-            <div className="flex items-center text-sm text-green-600">
-              <CheckCircle className="h-4 w-4 mr-2" />
-              Documented Roadmap
-            </div>
-          )}
-          {projectData.metadata.hasAuditReports && (
-            <div className="flex items-center text-sm text-green-600">
-              <CheckCircle className="h-4 w-4 mr-2" />
-              Security Audit Reports
-            </div>
-          )}
-          {projectData.metadata.hasTeamVerification && (
-            <div className="flex items-center text-sm text-green-600">
-              <CheckCircle className="h-4 w-4 mr-2" />
-              Team Verification
-            </div>
-          )}
-          {!projectData.metadata.hasTokenEconomics && (
-            <div className="flex items-center text-sm text-yellow-600">
-              <AlertTriangle className="h-4 w-4 mr-2" />
-              Missing Token Economics
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Risk Factors */}
       {legitimacyAssessment.riskFactors.length > 0 && (
-        <div className="mb-4">
-          <h5 className="text-sm font-medium text-gray-700 mb-2">
-            Risk Factors
-          </h5>
-          <div className="space-y-1">
+        <div className="mb-6 pt-5 border-t hairline">
+          <div className="label mb-3">risk factors</div>
+          <div className="space-y-1.5">
             {legitimacyAssessment.riskFactors.map((factor, index) => (
               <div
                 key={index}
-                className="flex items-center text-sm text-red-600"
+                className="flex items-start gap-2 text-xs text-danger"
               >
-                <AlertTriangle className="h-4 w-4 mr-2" />
-                {factor}
+                <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-px" />
+                <span>{factor}</span>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Overall Recommendation */}
-      <div className="bg-gray-50 rounded-lg p-3">
-        <h5 className="text-sm font-medium text-gray-700 mb-1">
-          Recommendation
-        </h5>
-        <p className="text-sm text-gray-600">
+      <div className="bg-surface-2 border hairline p-4">
+        <div className="label mb-2">recommendation</div>
+        <p className="text-xs text-ink-dim leading-relaxed">
           {legitimacyAssessment.overallRecommendation}
         </p>
       </div>
